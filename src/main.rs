@@ -3,7 +3,11 @@ use std::{
     path::{Path, PathBuf},
 };
 
+mod commands;
+use commands::branches::{Branch, get_branches};
+
 const ROOT_DIR: &str = ".";
+const REFS_DIR: &str = "refs/heads";
 
 fn main() {
     let mut git_dir: PathBuf = PathBuf::from(ROOT_DIR);
@@ -15,7 +19,7 @@ fn main() {
             git_dir = Path::new("../").join(git_dir);
         }
     }
-    println!("Git dir is: {:?}", git_dir);
+    get_branches(git_dir);
 }
 
 fn it_includes_git(dir: PathBuf) -> bool {
