@@ -33,6 +33,6 @@ Use `git-branch` to manage git branches on interactive mode.
 
 ## Special thanks:
 
-The original idea came from the incredible [Valentin Barit](https://github.com/quibaritaenperdresatrompe)
+The original idea came from the 🧙‍♂️ [Valentin Barit](https://github.com/quibaritaenperdresatrompe)
 
 The original repo can be accessed here [https://github.com/quibaritaenperdresatrompe/git-branch](https://github.com/quibaritaenperdresatrompe/git-branch)
