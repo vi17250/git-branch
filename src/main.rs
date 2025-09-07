@@ -4,7 +4,8 @@ use std::{
 };
 
 mod commands;
-use commands::branches::{Branch, get_branches};
+use commands::branches::get_branches;
+use commands::dialog;
 
 const ROOT_DIR: &str = ".";
 const REFS_DIR: &str = "refs/heads";
@@ -21,7 +22,8 @@ fn main() {
             git_dir = Path::new("../").join(git_dir);
         }
     }
-    get_branches(git_dir);
+    let branches = get_branches(git_dir);
+    dialog::selection(branches);
 }
 
 fn it_includes_git(dir: PathBuf) -> bool {
