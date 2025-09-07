@@ -87,7 +87,6 @@ dependencies = [
 name = "git-branches"
 version = "0.1.0"
 dependencies = [
- "console",
  "dialoguer",
 ]
 
