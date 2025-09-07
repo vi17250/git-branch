@@ -1,6 +1,6 @@
 use dialoguer::{MultiSelect, theme::ColorfulTheme};
 
-use super::branches::Branch;
+use crate::branches::def::Branch;
 pub fn selection(branches: Vec<Branch>) -> Vec<Branch> {
     let selection = MultiSelect::with_theme(&ColorfulTheme::default())
         .with_prompt("Which branches do you want to delete?")
@@ -22,7 +22,8 @@ fn filter_branches(branches: Vec<Branch>, selection: Vec<usize>) -> Vec<Branch> 
 mod test {
     use std::{ffi::OsString, path::PathBuf, time::SystemTime};
 
-    use crate::commands::{branches::Branch, dialog::filter_branches};
+    use crate::branches::def::Branch;
+    use crate::dialog::filter_branches;
 
     #[test]
     fn it_returns_empty_collection() {

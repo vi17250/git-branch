@@ -3,9 +3,9 @@ use std::{
     path::{Path, PathBuf},
 };
 
-mod commands;
-use commands::branches::get_branches;
-use commands::dialog;
+mod branches;
+use branches::utils::get_branches;
+mod dialog;
 
 const ROOT_DIR: &str = ".";
 const REFS_DIR: &str = "refs/heads";

@@ -1,0 +1,48 @@
+use std::{
+    ffi::OsString,
+    fmt::{Display, Formatter, Result},
+    path::PathBuf,
+    time::SystemTime,
+};
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Branch {
+    name: OsString,
+    refs_dir: PathBuf,
+    logs_dir: PathBuf,
+    is_head: bool,
+    last_update: SystemTime,
+}
+
+impl Branch {
+    pub fn new(
+        name: OsString,
+        refs_dir: PathBuf,
+        logs_dir: PathBuf,
+        is_head: bool,
+        last_update: SystemTime,
+    ) -> Branch {
+        Branch {
+            name,
+            refs_dir,
+            logs_dir,
+            is_head,
+            last_update,
+        }
+    }
+
+    pub fn is_removable(&self) -> bool {
+        !self.is_head
+    }
+}
+
+impl Display for Branch {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        let name = self
+            .name
+            .to_str()
+            .expect("Failed to parse OsString to String");
+
+        write!(f, "{}\t", name,)
+    }
+}
