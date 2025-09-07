@@ -8,6 +8,8 @@ use commands::branches::{Branch, get_branches};
 
 const ROOT_DIR: &str = ".";
 const REFS_DIR: &str = "refs/heads";
+const LOGS_DIR: &str = "logs/refs/heads";
+const HEAD: &str = "HEAD";
 
 fn main() {
     let mut git_dir: PathBuf = PathBuf::from(ROOT_DIR);

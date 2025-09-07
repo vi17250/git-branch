@@ -1,4 +1,4 @@
-use crate::REFS_DIR;
+use crate::{HEAD, LOGS_DIR, REFS_DIR};
 use std::{
     ffi::OsString,
     fs::{read_dir, read_to_string},
@@ -8,48 +8,49 @@ use std::{
 #[derive(Debug)]
 pub struct Branch {
     name: OsString,
-    ref_dir: PathBuf,
+    refs_dir: PathBuf,
+    logs_dir: PathBuf,
     is_head: bool,
 }
 
 impl Branch {
-    fn new(path: PathBuf) -> Branch {
-        let name = path.file_name().expect("Failed to parse file name").into();
+    fn new(name: OsString, refs_dir: PathBuf, logs_dir: PathBuf, is_head: bool) -> Branch {
         Branch {
             name,
-            ref_dir: path,
-            is_head: false,
-        }
-    }
-
-    fn set_is_head(&mut self, head: &OsString) {
-        if *head == self.name {
-            self.is_head = true
+            refs_dir,
+            logs_dir,
+            is_head,
         }
     }
 }
 
 pub fn get_branches(git_dir: PathBuf) {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
+    let logs_dir = Path::new(&git_dir).join(LOGS_DIR);
     let head = get_head(&git_dir);
 
-    let mut branches = read_dir(refs_dir)
+    let branches = read_dir(&refs_dir)
         .expect("Failes to read dir")
         .map(|entry| {
-            let branch_path: PathBuf = entry.expect("Failes to parse branch path").path();
-            return Branch::new(branch_path);
+            let branch_name = entry
+                .expect("Failes to parse branch path")
+                .path()
+                .file_name()
+                .expect("Failed to read branch name")
+                .to_os_string();
+            return Branch::new(
+                branch_name.clone(),
+                PathBuf::from(&refs_dir).join(&branch_name),
+                PathBuf::from(&logs_dir).join(&branch_name),
+                branch_name == head,
+            );
         })
         .collect::<Vec<Branch>>();
-
-    branches
-        .iter_mut()
-        .for_each(|mut branch| branch.set_is_head(&head));
-
     dbg!(branches);
 }
 
 fn get_head(git_dir: &PathBuf) -> OsString {
-    let head_file_path = Path::new(&git_dir).join("HEAD");
+    let head_file_path = Path::new(&git_dir).join(HEAD);
     let content = read_to_string(head_file_path).expect("Should have been able to read the file");
     let head_path = PathBuf::from(
         content
