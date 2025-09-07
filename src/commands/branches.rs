@@ -3,6 +3,7 @@ use std::{
     ffi::OsString,
     fs::{read_dir, read_to_string},
     path::{Path, PathBuf},
+    time::SystemTime,
 };
 
 #[derive(Debug)]
@@ -11,15 +12,23 @@ pub struct Branch {
     refs_dir: PathBuf,
     logs_dir: PathBuf,
     is_head: bool,
+    last_update: SystemTime,
 }
 
 impl Branch {
-    fn new(name: OsString, refs_dir: PathBuf, logs_dir: PathBuf, is_head: bool) -> Branch {
+    fn new(
+        name: OsString,
+        refs_dir: PathBuf,
+        logs_dir: PathBuf,
+        is_head: bool,
+        last_update: SystemTime,
+    ) -> Branch {
         Branch {
             name,
             refs_dir,
             logs_dir,
             is_head,
+            last_update,
         }
     }
 }
@@ -31,19 +40,24 @@ pub fn get_branches(git_dir: PathBuf) {
 
     let branches = read_dir(&refs_dir)
         .expect("Failes to read dir")
-        .map(|entry| {
-            let branch_name = entry
-                .expect("Failes to parse branch path")
-                .path()
-                .file_name()
-                .expect("Failed to read branch name")
-                .to_os_string();
-            return Branch::new(
-                branch_name.clone(),
-                PathBuf::from(&refs_dir).join(&branch_name),
-                PathBuf::from(&logs_dir).join(&branch_name),
-                branch_name == head,
-            );
+        .map(|entry| match entry {
+            Ok(entry) => {
+                let time = entry
+                    .metadata()
+                    .expect("Failed to parse metadata")
+                    .modified()
+                    .expect("Failed to parse system time");
+
+                let branch_name = entry.path().file_name().expect("WTF").to_os_string();
+                return Branch::new(
+                    branch_name.clone(),
+                    PathBuf::from(&refs_dir).join(&branch_name),
+                    PathBuf::from(&logs_dir).join(&branch_name),
+                    *branch_name == head,
+                    time,
+                );
+            }
+            Err(e) => panic!("Failed to parse entry"),
         })
         .collect::<Vec<Branch>>();
     dbg!(branches);
