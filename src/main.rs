@@ -12,7 +12,7 @@ const REFS_DIR: &str = "refs/heads";
 const LOGS_DIR: &str = "logs/refs/heads";
 const HEAD: &str = "HEAD";
 
-fn main() {
+fn main() -> Result<(), ()> {
     let mut git_dir: PathBuf = PathBuf::from(ROOT_DIR);
     loop {
         if it_includes_git(git_dir.clone()) {
@@ -25,6 +25,7 @@ fn main() {
     let branches = get_branches(git_dir);
     let to_del = dialog::selection(branches);
     dbg!(to_del);
+    Ok(())
 }
 
 fn it_includes_git(dir: PathBuf) -> bool {
