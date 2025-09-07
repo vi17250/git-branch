@@ -23,7 +23,8 @@ fn main() {
         }
     }
     let branches = get_branches(git_dir);
-    dialog::selection(branches);
+    let to_del = dialog::selection(branches);
+    dbg!(to_del);
 }
 
 fn it_includes_git(dir: PathBuf) -> bool {
