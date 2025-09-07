@@ -7,7 +7,7 @@ use std::{
     time::SystemTime,
 };
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Branch {
     name: OsString,
     refs_dir: PathBuf,
@@ -17,7 +17,7 @@ pub struct Branch {
 }
 
 impl Branch {
-    fn new(
+    pub fn new(
         name: OsString,
         refs_dir: PathBuf,
         logs_dir: PathBuf,
