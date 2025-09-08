@@ -23,9 +23,15 @@ fn main() -> Result<(), ()> {
         }
     }
     let branches = get_branches(git_dir);
-    let branches_to_delete = dialog::selection(branches);
+    if let None = branches {
+        println!(
+            "📭 No branches where found\n💡You can create branches using `git branch branch_name`"
+        );
+        return Ok(());
+    }
+    let branches_to_delete = dialog::selection(branches.expect("This should not happen"));
     let number_of_deleted_branches = delete_branches(branches_to_delete);
-    println!("{} branches supprimées", number_of_deleted_branches);
+    println!("{} branches deleted", number_of_deleted_branches);
     Ok(())
 }
 
