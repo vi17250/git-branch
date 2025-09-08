@@ -33,7 +33,7 @@ pub fn get_branches(git_dir: PathBuf) -> Vec<Branch> {
             Err(_) => panic!("Failed to parse entry"),
         })
         .collect::<Vec<Branch>>();
-    branches
+    filter_head(branches)
 }
 
 fn get_head(git_dir: &PathBuf) -> OsString {
@@ -48,4 +48,38 @@ fn get_head(git_dir: &PathBuf) -> OsString {
     );
     let head = head_path.file_name().expect("Failed");
     OsString::from(head)
+}
+
+fn filter_head(branches: Vec<Branch>) -> Vec<Branch> {
+    branches
+        .into_iter()
+        .filter(|branch| branch.is_removable())
+        .collect()
+}
+
+#[allow(warnings)]
+mod test {
+
+    use crate::branches::def::Branch;
+    use crate::branches::utils::filter_head;
+    use std::{ffi::OsString, path::PathBuf, time::SystemTime};
+
+    #[test]
+    fn it_returns_branches_without_head() {
+        let b1 = Branch::new(
+            OsString::from("b1"),
+            PathBuf::new(),
+            PathBuf::new(),
+            true,
+            SystemTime::now(),
+        );
+        let b2 = Branch::new(
+            OsString::from("b2"),
+            PathBuf::new(),
+            PathBuf::new(),
+            false,
+            SystemTime::now(),
+        );
+        assert_eq!(filter_head(vec![b1.clone(), b2.clone()]), vec![b2]);
+    }
 }
