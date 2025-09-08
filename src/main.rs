@@ -4,7 +4,7 @@ use std::{
 };
 
 mod branches;
-use branches::utils::get_branches;
+use branches::utils::{delete_branches, get_branches};
 mod dialog;
 
 const ROOT_DIR: &str = ".";
@@ -23,8 +23,9 @@ fn main() -> Result<(), ()> {
         }
     }
     let branches = get_branches(git_dir);
-    let to_del = dialog::selection(branches);
-    dbg!(to_del);
+    let branches_to_delete = dialog::selection(branches);
+    let number_of_deleted_branches = delete_branches(branches_to_delete);
+    println!("{} branches supprimées", number_of_deleted_branches);
     Ok(())
 }
 
