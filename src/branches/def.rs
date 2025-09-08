@@ -34,6 +34,10 @@ impl Branch {
     pub fn is_removable(&self) -> bool {
         !self.is_head
     }
+
+    pub fn get_paths(&self) -> (PathBuf, PathBuf) {
+        (self.refs_dir.clone(), self.logs_dir.clone())
+    }
 }
 
 impl Display for Branch {
