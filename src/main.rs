@@ -5,6 +5,7 @@ use std::{
 
 mod branches;
 use branches::utils::{delete_branches, get_branches};
+mod commits;
 mod dialog;
 
 const ROOT_DIR: &str = ".";

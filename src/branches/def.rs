@@ -5,6 +5,8 @@ use std::{
     time::SystemTime,
 };
 
+use crate::commits::def::Commit;
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Branch {
     name: OsString,
@@ -12,6 +14,7 @@ pub struct Branch {
     logs_dir: PathBuf,
     is_head: bool,
     last_update: SystemTime,
+    commit: Commit,
 }
 
 impl Branch {
@@ -21,6 +24,7 @@ impl Branch {
         logs_dir: PathBuf,
         is_head: bool,
         last_update: SystemTime,
+        commit: Commit,
     ) -> Branch {
         Branch {
             name,
@@ -28,6 +32,7 @@ impl Branch {
             logs_dir,
             is_head,
             last_update,
+            commit,
         }
     }
 
