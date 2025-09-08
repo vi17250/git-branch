@@ -2,7 +2,7 @@ use crate::branches::def::Branch;
 use crate::{HEAD, LOGS_DIR, REFS_DIR};
 use std::{
     ffi::OsString,
-    fs::{read_dir, read_to_string},
+    fs::{read_dir, read_to_string, remove_file},
     path::{Path, PathBuf},
 };
 
@@ -55,6 +55,16 @@ fn filter_head(branches: Vec<Branch>) -> Vec<Branch> {
         .into_iter()
         .filter(|branch| branch.is_removable())
         .collect()
+}
+
+pub fn delete_branches(branches: Vec<Branch>) -> usize {
+    let mut count: usize = 0;
+    for branch in branches {
+        remove_file(branch.get_paths().0).expect("Failed to delete branch");
+        remove_file(branch.get_paths().1).expect("Failed to delete branch");
+        count += 1;
+    }
+    count
 }
 
 #[allow(warnings)]
