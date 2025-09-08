@@ -23,7 +23,7 @@ Use `git-branch` to manage git branches on interactive mode.
 3. Install `git-branch` binary:
 
    ```bash
-    cp /target/debug/git-branch /opt/git-branch
+    cp ./target/debug/git-branch /opt/git-branch
    ```
 
 4. Run `git-branch` from everywhere on your computer 
