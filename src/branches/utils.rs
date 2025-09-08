@@ -1,8 +1,9 @@
 use crate::branches::def::Branch;
 use crate::branches::head::{filter_head, get_head};
+use crate::commits::def::Commit;
 use crate::{LOGS_DIR, REFS_DIR};
 use std::{
-    fs::{read_dir, remove_file},
+    fs::{read_dir, read_to_string, remove_file},
     path::{Path, PathBuf},
 };
 
@@ -22,12 +23,14 @@ pub fn get_branches(git_dir: PathBuf) -> Option<Vec<Branch>> {
                     .expect("Failed to parse system time");
 
                 let branch_name = entry.path().file_name().expect("WTF").to_os_string();
+                let commit_hash = read_to_string(entry.path()).expect("Failed to read commit hash");
                 return Branch::new(
                     branch_name.clone(),
                     PathBuf::from(&refs_dir).join(&branch_name),
                     PathBuf::from(&logs_dir).join(&branch_name),
                     *branch_name == head,
                     time,
+                    Commit::new(commit_hash),
                 );
             }
             Err(_) => panic!("Failed to parse entry"),
