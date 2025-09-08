@@ -6,7 +6,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-pub fn get_branches(git_dir: PathBuf) -> Vec<Branch> {
+pub fn get_branches(git_dir: PathBuf) -> Option<Vec<Branch>> {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
     let logs_dir = Path::new(&git_dir).join(LOGS_DIR);
     let head = get_head(&git_dir);
@@ -50,11 +50,15 @@ fn get_head(git_dir: &PathBuf) -> OsString {
     OsString::from(head)
 }
 
-fn filter_head(branches: Vec<Branch>) -> Vec<Branch> {
-    branches
+fn filter_head(branches: Vec<Branch>) -> Option<Vec<Branch>> {
+    let branches = branches
         .into_iter()
         .filter(|branch| branch.is_removable())
-        .collect()
+        .collect::<Vec<Branch>>();
+    match branches.len() {
+        0 => None,
+        _ => Some(branches),
+    }
 }
 
 pub fn delete_branches(branches: Vec<Branch>) -> usize {
@@ -90,6 +94,6 @@ mod test {
             false,
             SystemTime::now(),
         );
-        assert_eq!(filter_head(vec![b1.clone(), b2.clone()]), vec![b2]);
+        assert_eq!(filter_head(vec![b1.clone(), b2.clone()]), Some(vec![b2]));
     }
 }
