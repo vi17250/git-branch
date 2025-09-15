@@ -4,7 +4,7 @@ use crate::branches::def::Branch;
 pub fn selection(branches: Vec<Branch>) -> Vec<Branch> {
     let selection = MultiSelect::with_theme(&ColorfulTheme::default())
         .with_prompt("Which branches do you want to delete?")
-        .items(branches.iter().filter(|branch| branch.is_removable()))
+        .items(branches.iter())
         .interact()
         .expect("Failed to read branches to remove");
 
@@ -23,6 +23,7 @@ mod test {
     use std::{ffi::OsString, path::PathBuf, time::SystemTime};
 
     use crate::branches::def::Branch;
+    use crate::commits::def::Commit;
     use crate::dialog::filter_branches;
 
     #[test]
@@ -33,6 +34,7 @@ mod test {
             PathBuf::new(),
             false,
             SystemTime::now(),
+            Commit::new("hash1".to_string()),
         );
         let b2 = Branch::new(
             OsString::from("b2"),
@@ -40,6 +42,7 @@ mod test {
             PathBuf::new(),
             false,
             SystemTime::now(),
+            Commit::new("hash2".to_string()),
         );
         assert_eq!(filter_branches(vec![b1, b2], vec![]), vec![])
     }
@@ -51,6 +54,7 @@ mod test {
             PathBuf::new(),
             false,
             SystemTime::now(),
+            Commit::new("hash1".to_string()),
         );
         let b2 = Branch::new(
             OsString::from("b2"),
@@ -58,6 +62,7 @@ mod test {
             PathBuf::new(),
             false,
             SystemTime::now(),
+            Commit::new("hash2".to_string()),
         );
         assert_eq!(
             filter_branches(vec![b1.clone(), b2.clone()], vec![1]),
@@ -73,6 +78,7 @@ mod test {
             PathBuf::new(),
             false,
             SystemTime::now(),
+            Commit::new("hash1".to_string()),
         );
         let b2 = Branch::new(
             OsString::from("b2"),
@@ -80,6 +86,7 @@ mod test {
             PathBuf::new(),
             false,
             SystemTime::now(),
+            Commit::new("hash2".to_string()),
         );
         assert_eq!(
             filter_branches(vec![b1.clone(), b2.clone()], vec![0, 1]),
