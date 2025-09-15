@@ -5,7 +5,6 @@ use std::{
 };
 
 use crate::HEAD;
-use crate::branches::def::Branch;
 
 pub fn get_head(git_dir: &PathBuf) -> OsString {
     let head_file_path = Path::new(&git_dir).join(HEAD);
@@ -19,15 +18,4 @@ pub fn get_head(git_dir: &PathBuf) -> OsString {
     );
     let head = head_path.file_name().expect("Failed");
     OsString::from(head)
-}
-
-pub fn filter_head(branches: Vec<Branch>) -> Option<Vec<Branch>> {
-    let branches = branches
-        .into_iter()
-        .filter(|branch| branch.is_removable())
-        .collect::<Vec<Branch>>();
-    match branches.len() {
-        0 => None,
-        _ => Some(branches),
-    }
 }
