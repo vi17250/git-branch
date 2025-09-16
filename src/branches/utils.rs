@@ -8,10 +8,13 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use super::head::get_origin_head;
+
 pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
     let logs_dir = Path::new(&git_dir).join(LOGS_DIR);
     let head = get_head(&git_dir);
+    let origin_head = get_origin_head(&git_dir);
 
     let branches = read_dir(&refs_dir)?
         .map(|entry| match entry {
@@ -29,6 +32,7 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
                     PathBuf::from(&refs_dir).join(&branch_name),
                     PathBuf::from(&logs_dir).join(&branch_name),
                     *branch_name == head,
+                    *branch_name == origin_head,
                     time,
                     Commit::new(commit_hash),
                 );

@@ -10,6 +10,7 @@ mod dialog;
 
 const REFS_DIR: &str = "refs/heads";
 const LOGS_DIR: &str = "logs/refs/heads";
+const HEAD_DIR: &str = "refs/remotes/origin";
 const HEAD: &str = "HEAD";
 
 fn main() -> Result<()> {

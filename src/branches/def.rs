@@ -13,6 +13,7 @@ pub struct Branch {
     refs_dir: PathBuf,
     logs_dir: PathBuf,
     is_head: bool,
+    is_origin_head: bool,
     last_update: SystemTime,
     commit: Commit,
 }
@@ -23,6 +24,7 @@ impl Branch {
         refs_dir: PathBuf,
         logs_dir: PathBuf,
         is_head: bool,
+        is_origin_head: bool,
         last_update: SystemTime,
         commit: Commit,
     ) -> Branch {
@@ -31,6 +33,7 @@ impl Branch {
             refs_dir,
             logs_dir,
             is_head,
+            is_origin_head,
             last_update,
             commit,
         }

@@ -33,6 +33,7 @@ mod test {
             PathBuf::new(),
             PathBuf::new(),
             false,
+            false,
             SystemTime::now(),
             Commit::new("hash1".to_string()),
         );
@@ -40,6 +41,7 @@ mod test {
             OsString::from("b2"),
             PathBuf::new(),
             PathBuf::new(),
+            false,
             false,
             SystemTime::now(),
             Commit::new("hash2".to_string()),
@@ -53,6 +55,7 @@ mod test {
             PathBuf::new(),
             PathBuf::new(),
             false,
+            false,
             SystemTime::now(),
             Commit::new("hash1".to_string()),
         );
@@ -60,6 +63,7 @@ mod test {
             OsString::from("b2"),
             PathBuf::new(),
             PathBuf::new(),
+            false,
             false,
             SystemTime::now(),
             Commit::new("hash2".to_string()),
@@ -77,6 +81,7 @@ mod test {
             PathBuf::new(),
             PathBuf::new(),
             false,
+            false,
             SystemTime::now(),
             Commit::new("hash1".to_string()),
         );
@@ -84,6 +89,7 @@ mod test {
             OsString::from("b2"),
             PathBuf::new(),
             PathBuf::new(),
+            false,
             false,
             SystemTime::now(),
             Commit::new("hash2".to_string()),
