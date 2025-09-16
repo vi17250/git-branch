@@ -1,10 +1,19 @@
-Use `git-branch` to manage git branches interactively.
+Use `git-branch` to manage local git branches interactively.
 
 ## Important
 
 ⚠️ This project is currently being written and is not yet ready for production use. ⚠️
 
 > V0.1.0 coming soon
+
+## Who is this software intended for?
+
+For all developers who use git as their version control system
+
+## Goal
+
+`git-branch` display informations about every local branches.
+It also allows you to delete them in batches.
 
 ## Pre-requisites
 
@@ -15,3 +24,4 @@ Use `git-branch` to manage git branches interactively.
 The original idea came from the 🧙‍♂️ [Valentin Barit](https://github.com/quibaritaenperdresatrompe)
 
 The original repo can be accessed here [https://github.com/quibaritaenperdresatrompe/git-branch](https://github.com/quibaritaenperdresatrompe/git-branch)
+
