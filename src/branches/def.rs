@@ -52,6 +52,8 @@ impl Display for Branch {
             .to_str()
             .expect("Failed to parse OsString to String");
 
-        write!(f, "{}\t", name,)
+        let commit_hash = &self.commit;
+
+        write!(f, "{}\t{}", name, commit_hash)
     }
 }
