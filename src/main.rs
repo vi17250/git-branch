@@ -1,3 +1,4 @@
+use console::style;
 use std::{env, fs::read_dir, path::PathBuf};
 
 pub type Result<T> = std::result::Result<T, Error>;
@@ -29,6 +30,9 @@ fn main() -> Result<()> {
     }
 
     let branches = get_branches(&current_dir)?;
+
+    let intro = style("Which branches do you want to delete?").bold();
+    println!("{intro}");
     let branches_to_delete = dialog::selection(branches);
     let number_of_deleted_branches = delete_branches(branches_to_delete)?;
     println!("{} branches deleted", number_of_deleted_branches);

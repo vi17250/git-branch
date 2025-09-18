@@ -5,6 +5,8 @@ use std::{
     time::SystemTime,
 };
 
+use console::style;
+
 use crate::commits::def::Commit;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -54,6 +56,11 @@ impl Display for Branch {
 
         let commit_hash = &self.commit;
 
-        write!(f, "{}\t{}", name, commit_hash)
+        write!(
+            f,
+            "{0: <20} {1: <7}",
+            style(name).bold(),
+            style(commit_hash).color256(202)
+        )
     }
 }

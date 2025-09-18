@@ -1,14 +1,41 @@
-use dialoguer::{MultiSelect, theme::ColorfulTheme};
+use std::process;
 
 use crate::branches::def::Branch;
-pub fn selection(branches: Vec<Branch>) -> Vec<Branch> {
-    let selection = MultiSelect::with_theme(&ColorfulTheme::default())
-        .with_prompt("Which branches do you want to delete?")
-        .items(branches.iter())
-        .interact()
-        .expect("Failed to read branches to remove");
+use console::{Key, Term, style};
 
-    filter_branches(branches, selection)
+pub fn selection(branches: Vec<Branch>) -> Vec<Branch> {
+    let mut selected: Vec<usize> = vec![];
+
+    let mut highlight: usize = 0;
+
+    display(&branches, highlight, &selected);
+
+    let raw = std::env::args_os().any(|arg| arg == "-r" || arg == "--raw");
+    let term = Term::stdout();
+
+    loop {
+        let key = if raw {
+            term.read_key_raw()
+        } else {
+            term.read_key()
+        }
+        .expect("Failed tu parse key");
+
+        match key {
+            Key::ArrowUp => decrement(&mut highlight),
+            Key::ArrowDown => increment(&mut highlight, branches.len()),
+            Key::Char(' ') => toggle_highlight(highlight, &mut selected),
+            Key::Enter => break,
+            Key::Escape => process::exit(0),
+            _ => (),
+        };
+
+        let _ = term.move_cursor_up(branches.len() as usize);
+
+        display(&branches, highlight, &selected);
+    }
+
+    filter_branches(branches, selected)
 }
 
 fn filter_branches(branches: Vec<Branch>, selection: Vec<usize>) -> Vec<Branch> {
@@ -16,6 +43,44 @@ fn filter_branches(branches: Vec<Branch>, selection: Vec<usize>) -> Vec<Branch> 
         .iter()
         .map(|&index| branches.get(index).unwrap().clone())
         .collect::<Vec<Branch>>()
+}
+
+fn increment(value: &mut usize, max: usize) {
+    if *value <= max - 1 {
+        *value += 1
+    }
+}
+
+fn decrement(value: &mut usize) {
+    if *value != 0 {
+        *value -= 1
+    }
+}
+
+fn display(values: &Vec<Branch>, highlight: usize, selected: &Vec<usize>) {
+    let term = Term::stdout();
+    for (index, value) in values.iter().enumerate() {
+        let _ = term.clear_line();
+        if selected.into_iter().any(|select| *select == index) {
+            print!("{} ", style('✔').green().bold());
+        } else {
+            print!("{} ", style('☐').color256(0).bold());
+        }
+        if highlight == index {
+            println!("{}", style(value).white().on_green())
+        } else {
+            println!("{value}");
+        }
+    }
+}
+
+fn toggle_highlight(highlight: usize, selected: &mut Vec<usize>) {
+    let includes = selected.into_iter().any(|select| *select == highlight);
+    if includes {
+        selected.retain(|&value| value != highlight);
+    } else {
+        selected.push(highlight);
+    }
 }
 
 #[allow(warnings)]
