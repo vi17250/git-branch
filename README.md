@@ -19,6 +19,13 @@ It also allows you to delete them in batches.
 
 [Install `rustup`](https://www.rust-lang.org/tools/install) to compile the source code for our device/os
 
+## Todo
+
+- [ ] display HEAD branch but prevent deletion
+- [ ] prevent default branch deletion
+- [ ] display commit msg instead of commit hash
+- [ ] display is branch have been merged (and when)
+
 ## Special thanks:
 
 The original idea came from the 🧙‍♂️ [Valentin Barit](https://github.com/quibaritaenperdresatrompe)
