@@ -46,7 +46,7 @@ fn filter_branches(branches: Vec<Branch>, selection: Vec<usize>) -> Vec<Branch> 
 }
 
 fn increment(value: &mut usize, max: usize) {
-    if *value <= max - 1 {
+    if *value < max - 1 {
         *value += 1
     }
 }
