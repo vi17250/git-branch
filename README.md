@@ -6,7 +6,7 @@ Use `git-branch` to manage local git branches interactively.
 
 > V0.1.0 coming soon
 
-## Who is this software intended for?
+## Who is it intended for?
 
 For all developers who use git as their version control system
 
