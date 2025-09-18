@@ -8,6 +8,7 @@ mod branches;
 use branches::utils::{delete_branches, get_branches};
 mod commits;
 mod dialog;
+mod util;
 
 const REFS_DIR: &str = "refs/heads";
 const LOGS_DIR: &str = "logs/refs/heads";

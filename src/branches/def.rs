@@ -8,6 +8,7 @@ use std::{
 use console::style;
 
 use crate::commits::def::Commit;
+use crate::util::parse_time;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Branch {
@@ -60,13 +61,14 @@ impl Display for Branch {
             .elapsed()
             .expect("Failed tu parse last update")
             .as_secs();
+        let last_update = parse_time(&diff);
 
         write!(
             f,
             "{0: <20} {1: <7} {2: <10}",
             style(name).bold(),
             style(commit_hash).color256(202),
-            style(diff).color256(241).italic()
+            style(last_update).color256(241).italic()
         )
     }
 }
