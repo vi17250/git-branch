@@ -2,7 +2,7 @@ use std::{
     ffi::OsString,
     fmt::{Display, Formatter, Result},
     path::PathBuf,
-    time::SystemTime,
+    time::{Duration, SystemTime},
 };
 
 use console::style;
@@ -55,12 +55,18 @@ impl Display for Branch {
             .expect("Failed to parse OsString to String");
 
         let commit_hash = &self.commit;
+        let diff = self
+            .last_update
+            .elapsed()
+            .expect("Failed tu parse last update")
+            .as_secs();
 
         write!(
             f,
-            "{0: <20} {1: <7}",
+            "{0: <20} {1: <7} {2: <10}",
             style(name).bold(),
-            style(commit_hash).color256(202)
+            style(commit_hash).color256(202),
+            style(diff).color256(241).italic()
         )
     }
 }
