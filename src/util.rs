@@ -1,5 +1,3 @@
-use std::fmt::format;
-
 pub fn parse_time(seconds: &u64) -> String {
     match seconds {
         seconds if *seconds < 60 => format!("{seconds} sec"),

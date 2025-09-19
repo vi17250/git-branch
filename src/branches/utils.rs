@@ -35,7 +35,6 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
             }
             Err(_) => panic!("Failed to parse entry"),
         })
-        .filter(|branch| branch.is_removable())
         .collect::<Vec<Branch>>();
     Ok(branches)
 }

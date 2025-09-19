@@ -21,7 +21,6 @@ It also allows you to delete them in batches.
 
 ## Todo
 
-- [ ] display HEAD branch but prevent deletion
 - [ ] prevent default branch deletion
 - [ ] display commit msg instead of commit hash
 - [ ] display is branch have been merged (and when)

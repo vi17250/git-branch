@@ -2,7 +2,7 @@ use std::{
     ffi::OsString,
     fmt::{Display, Formatter, Result},
     path::PathBuf,
-    time::{Duration, SystemTime},
+    time::SystemTime,
 };
 
 use console::style;
@@ -45,6 +45,12 @@ impl Branch {
 
     pub fn get_paths(&self) -> (PathBuf, PathBuf) {
         (self.refs_dir.clone(), self.logs_dir.clone())
+    }
+
+    pub fn name(&self) -> &str {
+        self.name
+            .to_str()
+            .expect("Failed to parse OsString to String")
     }
 }
 
