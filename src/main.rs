@@ -29,11 +29,17 @@ fn main() -> Result<()> {
             }
         }
     }
+    let mut branches = get_branches(&current_dir).unwrap();
 
-    let branches = get_branches(&current_dir)?;
+    let head_branch_index = branches
+        .iter()
+        .position(|branch| !branch.is_removable())
+        .expect("Failed to find head branch");
+    let head_branch = branches.remove(head_branch_index);
 
+    let head = style(head_branch.name()).green().bold();
     let intro = style("Which branches do you want to delete?").bold();
-    println!("{intro}");
+    println!("{intro}\nHEAD branch: {head}");
     let branches_to_delete = dialog::selection(branches);
     let number_of_deleted_branches = delete_branches(branches_to_delete)?;
     println!("{} branches deleted", number_of_deleted_branches);
