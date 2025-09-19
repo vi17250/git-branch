@@ -1,6 +1,6 @@
 use crate::Result;
 use crate::branches::def::Branch;
-use crate::branches::head::get_head;
+use crate::branches::{head::get_head, origin::get_origin};
 use crate::commits::def::Commit;
 use crate::{LOGS_DIR, REFS_DIR};
 use std::{
@@ -12,6 +12,7 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
     let logs_dir = Path::new(&git_dir).join(LOGS_DIR);
     let head = get_head(&git_dir);
+    let origin = get_origin(&git_dir);
 
     let branches = read_dir(&refs_dir)?
         .map(|entry| match entry {
@@ -29,6 +30,7 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
                     PathBuf::from(&refs_dir).join(&branch_name),
                     PathBuf::from(&logs_dir).join(&branch_name),
                     *branch_name == head,
+                    *branch_name == origin,
                     time,
                     Commit::new(commit_hash),
                 );
