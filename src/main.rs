@@ -41,10 +41,10 @@ fn main() -> Result<()> {
         "{} {} {}",
         style("HEAD").color256(6).bold(),
         style("->").color256(202),
-        style(head_branch.name()).green().bold()
+        head_branch
     );
     let intro = style("Which branches do you want to delete?").bold();
-    println!("{head}\n{intro}");
+    println!("\n{head}\n\n{intro}");
 
     let branches_to_delete = dialog::selection(branches);
     let number_of_deleted_branches = delete_branches(branches_to_delete)?;

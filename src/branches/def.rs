@@ -46,12 +46,6 @@ impl Branch {
     pub fn get_paths(&self) -> (PathBuf, PathBuf) {
         (self.refs_dir.clone(), self.logs_dir.clone())
     }
-
-    pub fn name(&self) -> &str {
-        self.name
-            .to_str()
-            .expect("Failed to parse OsString to String")
-    }
 }
 
 impl Display for Branch {
@@ -71,7 +65,7 @@ impl Display for Branch {
 
         write!(
             f,
-            "{0: <20} {1: <7} {2: <10}",
+            "{0: <12} {1: <7} {2: <10}",
             style(name).bold(),
             style(commit_hash).color256(202),
             style(last_update).color256(241).italic()
