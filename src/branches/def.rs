@@ -42,8 +42,8 @@ impl Branch {
         }
     }
 
-    pub fn is_removable(&self) -> bool {
-        !self.is_head
+    pub fn is_head(&self) -> bool {
+        self.is_head
     }
 
     pub fn is_origin(&self) -> bool {

@@ -30,18 +30,27 @@ fn main() -> Result<()> {
             }
         }
     }
-    let mut branches = get_branches(&current_dir).unwrap();
 
-    let head_branch_index = branches
-        .iter()
-        .position(|branch| !branch.is_removable())
-        .expect("Failed to find head branch");
-    let head_branch = branches.remove(head_branch_index);
+    let mut branches = get_branches(&current_dir).unwrap();
 
     let origin_branch = branches
         .iter()
         .find(|branch| branch.is_origin())
         .expect("Failed to find origin");
+
+    let origin = format!(
+        "{} {} {}",
+        style("origin").red().bold(),
+        style("/").red(),
+        origin_branch
+    );
+
+    let head_branch_index = branches
+        .iter()
+        .position(|branch| branch.is_head())
+        .expect("Failed to find head branch");
+
+    let head_branch = branches.remove(head_branch_index);
 
     let head = format!(
         "{} {} {}",
@@ -50,12 +59,6 @@ fn main() -> Result<()> {
         head_branch
     );
 
-    let origin = format!(
-        "{} {} {}",
-        style("origin").red().bold(),
-        style("/").red(),
-        origin_branch
-    );
     let intro = style("Which branches do you want to delete?").bold();
     println!("\n{head}\n{origin}\n\n{intro}");
 
