@@ -1,11 +1,5 @@
 Use `git-branch` to manage local git branches interactively.
 
-## Important
-
-⚠️ This project is currently being written and is not yet ready for production use. ⚠️
-
-> V0.1.0 coming soon
-
 ## Who is it intended for?
 
 For all developers who use git as their version control system
@@ -18,12 +12,6 @@ It also allows you to delete them in batches.
 ## Pre-requisites
 
 [Install `rustup`](https://www.rust-lang.org/tools/install) to compile the source code for our device/os
-
-## Todo
-
-- [ ] prevent default branch deletion
-- [ ] display commit msg instead of commit hash
-- [ ] display is branch have been merged (and when)
 
 ## Special thanks:
 
