@@ -1,6 +1,6 @@
 use std::{
     ffi::OsString,
-    fmt::{Display, Formatter, Result, format},
+    fmt::{Display, Formatter, Result},
     path::PathBuf,
     time::SystemTime,
 };
