@@ -1,6 +1,6 @@
 use std::{
     ffi::OsString,
-    fmt::{Display, Formatter, Result},
+    fmt::{Display, Formatter, Result, format},
     path::PathBuf,
     time::SystemTime,
 };
@@ -16,6 +16,7 @@ pub struct Branch {
     refs_dir: PathBuf,
     logs_dir: PathBuf,
     is_head: bool,
+    is_origin: bool,
     last_update: SystemTime,
     commit: Commit,
 }
@@ -26,6 +27,7 @@ impl Branch {
         refs_dir: PathBuf,
         logs_dir: PathBuf,
         is_head: bool,
+        is_origin: bool,
         last_update: SystemTime,
         commit: Commit,
     ) -> Branch {
@@ -34,6 +36,7 @@ impl Branch {
             refs_dir,
             logs_dir,
             is_head,
+            is_origin,
             last_update,
             commit,
         }
@@ -43,6 +46,10 @@ impl Branch {
         !self.is_head
     }
 
+    pub fn is_origin(&self) -> bool {
+        self.is_origin
+    }
+
     pub fn get_paths(&self) -> (PathBuf, PathBuf) {
         (self.refs_dir.clone(), self.logs_dir.clone())
     }
@@ -50,10 +57,16 @@ impl Branch {
 
 impl Display for Branch {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        let name = self
-            .name
-            .to_str()
-            .expect("Failed to parse OsString to String");
+        let mut name = style(
+            self.name
+                .to_str()
+                .expect("Failed to parse OsString to String"),
+        )
+        .bold();
+
+        if self.is_origin {
+            name = name.red();
+        };
 
         let commit_hash = &self.commit;
         let diff = self
@@ -66,7 +79,7 @@ impl Display for Branch {
         write!(
             f,
             "{0: <12} {1: <7} {2: <10}",
-            style(name).bold(),
+            name,
             style(commit_hash).color256(202),
             style(last_update).color256(241).italic()
         )

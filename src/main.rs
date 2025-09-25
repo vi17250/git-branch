@@ -13,6 +13,7 @@ mod util;
 const REFS_DIR: &str = "refs/heads";
 const LOGS_DIR: &str = "logs/refs/heads";
 const HEAD: &str = "HEAD";
+const ORIGIN_DIR: &str = "refs/remotes/origin/HEAD";
 
 fn main() -> Result<()> {
     let mut current_dir = env::current_dir()?;
@@ -37,14 +38,26 @@ fn main() -> Result<()> {
         .expect("Failed to find head branch");
     let head_branch = branches.remove(head_branch_index);
 
+    let origin_branch = branches
+        .iter()
+        .find(|branch| branch.is_origin())
+        .expect("Failed to find origin");
+
     let head = format!(
         "{} {} {}",
         style("HEAD").color256(6).bold(),
         style("->").color256(202),
         head_branch
     );
+
+    let origin = format!(
+        "{} {} {}",
+        style("origin").red().bold(),
+        style("/").red(),
+        origin_branch
+    );
     let intro = style("Which branches do you want to delete?").bold();
-    println!("\n{head}\n\n{intro}");
+    println!("\n{head}\n{origin}\n\n{intro}");
 
     let branches_to_delete = dialog::selection(branches);
     let number_of_deleted_branches = delete_branches(branches_to_delete)?;
