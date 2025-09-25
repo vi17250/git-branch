@@ -2,6 +2,13 @@
 name = "git-branch"
 version = "0.0.1"
 edition = "2024"
+authors = ["Victor Aubinaud"]
+description = "Use git-branch to manage local git branches interactively"
+documentation= "https://github.com/vi17250/git-branch"
+repository= "https://github.com/vi17250/git-branch"
+license = "MIT"
+readme = "README.md"
+homepage= "https://github.com/vi17250/git-branch"
 
 [dependencies]
 console = "0.16.1"
