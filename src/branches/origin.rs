@@ -6,9 +6,12 @@ use std::{
 
 use crate::ORIGIN_DIR;
 
-pub fn get_origin(git_dir: &PathBuf) -> OsString {
+pub fn get_origin(git_dir: &PathBuf) -> Result<OsString, ()> {
     let head_file_path = Path::new(&git_dir).join(ORIGIN_DIR);
-    let content = read_to_string(head_file_path).expect("Should have been able to read the file");
+    let content = match read_to_string(head_file_path) {
+        Ok(content) => content,
+        Err(_) => return Err(()),
+    };
     let head_path = PathBuf::from(
         content
             .split(" ")
@@ -17,5 +20,5 @@ pub fn get_origin(git_dir: &PathBuf) -> OsString {
             .replace("\n", ""),
     );
     let origin = head_path.file_name().expect("Failed");
-    OsString::from(origin)
+    Ok(OsString::from(origin))
 }

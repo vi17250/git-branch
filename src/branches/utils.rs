@@ -25,12 +25,16 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
 
                 let branch_name = entry.path().file_name().expect("WTF").to_os_string();
                 let commit_hash = read_to_string(entry.path()).expect("Failed to read commit hash");
+                let is_origin = match &origin {
+                    Ok(origin) => *branch_name == *origin,
+                    Err(_) => false,
+                };
                 return Branch::new(
                     branch_name.clone(),
                     PathBuf::from(&refs_dir).join(&branch_name),
                     PathBuf::from(&logs_dir).join(&branch_name),
                     *branch_name == head,
-                    *branch_name == origin,
+                    is_origin,
                     time,
                     Commit::new(commit_hash),
                 );

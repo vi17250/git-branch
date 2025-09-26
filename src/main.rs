@@ -33,17 +33,17 @@ fn main() -> Result<()> {
 
     let mut branches = get_branches(&current_dir).unwrap();
 
-    let origin_branch = branches
-        .iter()
-        .find(|branch| branch.is_origin())
-        .expect("Failed to find origin");
+    let origin_branch = branches.iter().find(|branch| branch.is_origin());
 
-    let origin = format!(
-        "{} {} {}",
-        style("origin").red().bold(),
-        style("/").red(),
-        origin_branch
-    );
+    let origin = match origin_branch {
+        Some(origin_branch) => format!(
+            "{} {} {}",
+            style("origin").red().bold(),
+            style("/").red(),
+            origin_branch
+        ),
+        None => format!("origin is empty on this repository"),
+    };
 
     let head_branch_index = branches
         .iter()
@@ -60,7 +60,7 @@ fn main() -> Result<()> {
     );
 
     let intro = style("Which branches do you want to delete?").bold();
-    println!("\n{head}\n{origin}\n\n{intro}");
+    println!("{origin}\n{head}\n\n{intro}");
 
     let branches_to_delete = dialog::selection(branches);
     let number_of_deleted_branches = delete_branches(branches_to_delete)?;
