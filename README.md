@@ -13,6 +13,13 @@ It also allows you to delete them in batches.
 
 [Install `rustup`](https://www.rust-lang.org/tools/install) to compile the source code for our device/os
 
+## Install git-branch
+
+Run
+```bash 
+cargo install --git https://github.com/vi17250/git-branch
+```
+
 ## Special thanks:
 
 The original idea came from the 🧙‍♂️ [Valentin Barit](https://github.com/quibaritaenperdresatrompe)
