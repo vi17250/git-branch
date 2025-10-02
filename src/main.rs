@@ -31,7 +31,7 @@ fn main() -> Result<()> {
         }
     }
 
-    let mut branches = get_branches(&current_dir).unwrap();
+    let mut branches = get_branches(&current_dir).expect("Failed to get git branches");
 
     let origin_branch = branches.iter().find(|branch| branch.is_origin());
 
