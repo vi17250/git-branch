@@ -13,3 +13,4 @@ homepage= "https://github.com/vi17250/git-branch"
 [dependencies]
 console = "0.16.1"
 dialoguer = { version = "0.12.0", features = ["fuzzy-select"] }
+walkdir = "2.5.0"

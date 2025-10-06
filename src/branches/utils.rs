@@ -4,9 +4,10 @@ use crate::branches::{head::get_head, origin::get_origin};
 use crate::commits::def::Commit;
 use crate::{LOGS_DIR, REFS_DIR};
 use std::{
-    fs::{read_dir, read_to_string, remove_file},
+    fs::{read_to_string, remove_file},
     path::{Path, PathBuf},
 };
+use walkdir::WalkDir;
 
 pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
@@ -14,35 +15,48 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
     let head = get_head(&git_dir);
     let origin = get_origin(&git_dir);
 
-    let branches = read_dir(&refs_dir)?
-        .map(|entry| match entry {
-            Ok(entry) => {
-                let time = entry
-                    .metadata()
-                    .expect("Failed to parse metadata")
-                    .modified()
-                    .expect("Failed to parse system time");
-
-                let branch_name = entry.path().file_name().expect("WTF").to_os_string();
-                let commit_hash = read_to_string(entry.path()).expect("Failed to read commit hash");
-                let is_origin = match &origin {
-                    Ok(origin) => *branch_name == *origin,
-                    Err(_) => false,
-                };
-                return Branch::new(
-                    branch_name.clone(),
-                    PathBuf::from(&refs_dir).join(&branch_name),
-                    PathBuf::from(&logs_dir).join(&branch_name),
-                    *branch_name == head,
-                    is_origin,
-                    time,
-                    Commit::new(commit_hash),
-                );
-            }
-            Err(_) => panic!("Failed to parse entry"),
+    let branches_name = get_branches_name(&refs_dir);
+    let branches = branches_name
+        .expect("WTF")
+        .iter()
+        .map(|branch_name| {
+            let path = Path::new(&refs_dir).join(branch_name);
+            let time = &path
+                .metadata()
+                .expect("Failed to parse metadata")
+                .modified()
+                .expect("Failed to parse system time");
+            let commit_hash = read_to_string(&path).expect("Failed to read commit hash");
+            let is_origin = match &origin {
+                Ok(origin) => **branch_name == **origin,
+                Err(_) => false,
+            };
+            return Branch::new(
+                branch_name.clone().into(),
+                PathBuf::from(&refs_dir).join(&branch_name),
+                PathBuf::from(&logs_dir).join(&branch_name),
+                **branch_name == *head,
+                is_origin,
+                *time,
+                Commit::new(commit_hash),
+            );
         })
         .collect::<Vec<Branch>>();
     Ok(branches)
+}
+
+fn get_branches_name(refs_dir: &PathBuf) -> Result<Vec<String>> {
+    let mut names: Vec<String> = vec![];
+
+    for entry in WalkDir::new(refs_dir.to_str().expect("WTF")) {
+        let entry = entry.unwrap();
+        if entry.path().is_file() {
+            let path = entry.path().display().to_string();
+            let mut name = path.replace(&refs_dir.to_str().unwrap(), "");
+            names.push(name.split_off(1));
+        }
+    }
+    Ok(names)
 }
 
 pub fn delete_branches(branches: Vec<Branch>) -> Result<usize> {
