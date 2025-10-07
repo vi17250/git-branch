@@ -9,7 +9,7 @@ mod dialog;
 mod util;
 
 mod error;
-pub use crate::error::{Result, Error};
+pub use crate::error::{Error, Result};
 
 const REFS_DIR: &str = "refs/heads";
 const LOGS_DIR: &str = "logs/refs/heads";
@@ -64,7 +64,7 @@ fn main() -> Result<()> {
     println!("{origin}\n{head}\n\n{intro}");
 
     let branches_to_delete = dialog::selection(branches)?;
-    let number_of_deleted_branches = delete_branches(branches_to_delete)?;
+    let number_of_deleted_branches = delete_branches(&current_dir, branches_to_delete)?;
     println!("{} branches deleted", number_of_deleted_branches);
 
     Ok(())
