@@ -1,7 +1,6 @@
 use std::{
     ffi::OsString,
     fmt::{Display, Formatter, Result},
-    path::PathBuf,
     time::SystemTime,
 };
 
@@ -13,8 +12,6 @@ use crate::util::parse_time;
 #[derive(Debug, Clone, PartialEq)]
 pub struct Branch {
     name: OsString,
-    refs_dir: PathBuf,
-    logs_dir: PathBuf,
     is_head: bool,
     is_origin: bool,
     last_update: SystemTime,
@@ -24,8 +21,6 @@ pub struct Branch {
 impl Branch {
     pub fn new(
         name: OsString,
-        refs_dir: PathBuf,
-        logs_dir: PathBuf,
         is_head: bool,
         is_origin: bool,
         last_update: SystemTime,
@@ -33,8 +28,6 @@ impl Branch {
     ) -> Branch {
         Branch {
             name,
-            refs_dir,
-            logs_dir,
             is_head,
             is_origin,
             last_update,
@@ -50,8 +43,8 @@ impl Branch {
         self.is_origin
     }
 
-    pub fn get_paths(&self) -> (PathBuf, PathBuf) {
-        (self.refs_dir.clone(), self.logs_dir.clone())
+    pub fn get_name(&self) -> OsString {
+        self.name.clone()
     }
 }
 

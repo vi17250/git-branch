@@ -37,7 +37,7 @@ pub fn selection(branches: Vec<Branch>) -> Result<Vec<Branch>> {
         display(&branches, highlight, &selected);
     }
 
-    let branches= filter_branches(branches, selected)?;
+    let branches = filter_branches(branches, selected)?;
     Ok(branches)
 }
 
@@ -99,8 +99,6 @@ mod test {
     fn it_returns_empty_collection() {
         let b1 = Branch::new(
             OsString::from("b1"),
-            PathBuf::new(),
-            PathBuf::new(),
             false,
             false,
             SystemTime::now(),
@@ -108,8 +106,6 @@ mod test {
         );
         let b2 = Branch::new(
             OsString::from("b2"),
-            PathBuf::new(),
-            PathBuf::new(),
             false,
             false,
             SystemTime::now(),
@@ -121,8 +117,6 @@ mod test {
     fn it_returns_one_branche() {
         let b1 = Branch::new(
             OsString::from("b1"),
-            PathBuf::new(),
-            PathBuf::new(),
             false,
             false,
             SystemTime::now(),
@@ -130,8 +124,6 @@ mod test {
         );
         let b2 = Branch::new(
             OsString::from("b2"),
-            PathBuf::new(),
-            PathBuf::new(),
             false,
             false,
             SystemTime::now(),
@@ -147,8 +139,6 @@ mod test {
     fn it_returns_all_branches() {
         let b1 = Branch::new(
             OsString::from("b1"),
-            PathBuf::new(),
-            PathBuf::new(),
             false,
             false,
             SystemTime::now(),
@@ -156,8 +146,6 @@ mod test {
         );
         let b2 = Branch::new(
             OsString::from("b2"),
-            PathBuf::new(),
-            PathBuf::new(),
             false,
             false,
             SystemTime::now(),

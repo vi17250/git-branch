@@ -3,15 +3,16 @@ use crate::branches::def::Branch;
 use crate::branches::{head::get_head, origin::get_origin};
 use crate::commits::def::Commit;
 use crate::{LOGS_DIR, REFS_DIR};
+use std::ffi::OsString;
+use std::fs::{remove_dir, remove_file};
 use std::{
-    fs::{read_to_string, remove_file},
+    fs::read_to_string,
     path::{Path, PathBuf},
 };
 use walkdir::WalkDir;
 
 pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
-    let logs_dir = Path::new(&git_dir).join(LOGS_DIR);
     let head = get_head(&git_dir)?;
     let origin = get_origin(&git_dir);
 
@@ -32,8 +33,6 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
             };
             return Branch::new(
                 branch_name.clone().into(),
-                PathBuf::from(&refs_dir).join(&branch_name),
-                PathBuf::from(&logs_dir).join(&branch_name),
                 **branch_name == *head,
                 is_origin,
                 *time,
@@ -59,12 +58,37 @@ fn get_branches_name(refs_dir: &PathBuf) -> Result<Vec<String>> {
     Ok(names)
 }
 
-pub fn delete_branches(branches: Vec<Branch>) -> Result<usize> {
+pub fn delete_branches(git_dir: &PathBuf, branches: Vec<Branch>) -> Result<usize> {
     let mut count: usize = 0;
     for branch in branches {
-        remove_file(branch.get_paths().0)?;
-        remove_file(branch.get_paths().1)?;
+        remove(git_dir, branch.get_name())?;
         count += 1;
     }
     Ok(count)
+}
+
+fn remove(git_dir: &PathBuf, path: OsString) -> Result<()> {
+    let refs_dir = Path::new(&git_dir).join(REFS_DIR);
+    let logs_dir = Path::new(&git_dir).join(LOGS_DIR);
+
+    let name = path
+        .into_string()
+        .ok()
+        .ok_or("Failed to parse branch name")?;
+    let mut paths = name.split("/").collect::<Vec<&str>>();
+
+    let path = Path::new(&refs_dir).join(&name);
+    remove_file(path)?;
+    let path = Path::new(&logs_dir).join(&name);
+    remove_file(path)?;
+
+    while paths.len() > 1 {
+        paths.pop();
+        let to_del = paths.join("/");
+        let path = Path::new(&refs_dir).join(&to_del);
+        remove_dir(path).ok();
+        let path = Path::new(&logs_dir).join(&to_del);
+        remove_dir(path).ok();
+    }
+    Ok(())
 }
