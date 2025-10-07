@@ -1,24 +1,37 @@
-Use `git-branch` to manage local git branches interactively.
+# Git branch
+
+**Use `git-branch` to manage local git branches interactivel 🔥**
+
+- Displays the origin branch
+- Displays the HEAD branch
+- Displays all local branches with the commit hash and time elapsed since the last modification
+- Delete branches simultaneously
 
 ## Who is it intended for?
 
 For all developers who use git as their version control system
 
-## Goal
+## Installation
 
-`git-branch` display informations about every local branches.
-It also allows you to delete them in batches.
+### Pre-requisites
 
-## Pre-requisites
+1. [Install `rustup`](https://www.rust-lang.org/tools/install) to compile the source code for our device/os
 
-[Install `rustup`](https://www.rust-lang.org/tools/install) to compile the source code for our device/os
+### Usage
 
-## Install git-branch
-
-Run
+1. 📦 Install with cargo from github repository 
 ```bash 
 cargo install --git https://github.com/vi17250/git-branch
 ```
+ 2. 🥈 Run `git-branch`
+
+ 3. 🚀 Optional but incredible: *Add a Oh My Zsh custom aliases* 
+```bash
+touch $ZSH_CUSTOM/aliases.zsh
+echo "alias ggb=git-branch" >> $ZSH_CUSTOM/aliases.zs
+source ~/.zshrc 
+```
+4. 🥇 Run `ggb`
 
 ## Special thanks:
 
