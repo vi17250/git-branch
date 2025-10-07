@@ -12,12 +12,11 @@ use walkdir::WalkDir;
 pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
     let logs_dir = Path::new(&git_dir).join(LOGS_DIR);
-    let head = get_head(&git_dir);
+    let head = get_head(&git_dir)?;
     let origin = get_origin(&git_dir);
 
     let branches_name = get_branches_name(&refs_dir);
-    let branches = branches_name
-        .expect("WTF")
+    let branches = branches_name?
         .iter()
         .map(|branch_name| {
             let path = Path::new(&refs_dir).join(branch_name);
@@ -47,12 +46,13 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
 
 fn get_branches_name(refs_dir: &PathBuf) -> Result<Vec<String>> {
     let mut names: Vec<String> = vec![];
+    let refs_dir_name = refs_dir.to_str().ok_or("Failed to convert dir to str")?;
 
     for entry in WalkDir::new(refs_dir.to_str().expect("WTF")) {
-        let entry = entry.unwrap();
+        let entry = entry?;
         if entry.path().is_file() {
             let path = entry.path().display().to_string();
-            let mut name = path.replace(&refs_dir.to_str().unwrap(), "");
+            let mut name = path.replace(refs_dir_name, "");
             names.push(name.split_off(1));
         }
     }
@@ -62,8 +62,8 @@ fn get_branches_name(refs_dir: &PathBuf) -> Result<Vec<String>> {
 pub fn delete_branches(branches: Vec<Branch>) -> Result<usize> {
     let mut count: usize = 0;
     for branch in branches {
-        remove_file(branch.get_paths().0).expect("Failed to delete branch");
-        remove_file(branch.get_paths().1).expect("Failed to delete branch");
+        remove_file(branch.get_paths().0)?;
+        remove_file(branch.get_paths().1)?;
         count += 1;
     }
     Ok(count)

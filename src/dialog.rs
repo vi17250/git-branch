@@ -1,9 +1,11 @@
 use std::process;
 
+use crate::Result;
+
 use crate::branches::def::Branch;
 use console::{Key, Term, style};
 
-pub fn selection(branches: Vec<Branch>) -> Vec<Branch> {
+pub fn selection(branches: Vec<Branch>) -> Result<Vec<Branch>> {
     let mut selected: Vec<usize> = vec![];
 
     let mut highlight: usize = 0;
@@ -35,14 +37,16 @@ pub fn selection(branches: Vec<Branch>) -> Vec<Branch> {
         display(&branches, highlight, &selected);
     }
 
-    filter_branches(branches, selected)
+    let branches= filter_branches(branches, selected)?;
+    Ok(branches)
 }
 
-fn filter_branches(branches: Vec<Branch>, selection: Vec<usize>) -> Vec<Branch> {
-    selection
+fn filter_branches(branches: Vec<Branch>, selection: Vec<usize>) -> Result<Vec<Branch>> {
+    let branches = selection
         .iter()
-        .map(|&index| branches.get(index).unwrap().clone())
-        .collect::<Vec<Branch>>()
+        .map(|&index| branches.get(index).expect("Failed to get branch").clone())
+        .collect::<Vec<Branch>>();
+    Ok(branches)
 }
 
 fn increment(value: &mut usize, max: usize) {
@@ -111,7 +115,7 @@ mod test {
             SystemTime::now(),
             Commit::new("hash2".to_string()),
         );
-        assert_eq!(filter_branches(vec![b1, b2], vec![]), vec![])
+        assert_eq!(filter_branches(vec![b1, b2], vec![]).unwrap(), vec![])
     }
     #[test]
     fn it_returns_one_branche() {
@@ -134,7 +138,7 @@ mod test {
             Commit::new("hash2".to_string()),
         );
         assert_eq!(
-            filter_branches(vec![b1.clone(), b2.clone()], vec![1]),
+            filter_branches(vec![b1.clone(), b2.clone()], vec![1]).unwrap(),
             vec![b2.clone()]
         )
     }
@@ -160,7 +164,7 @@ mod test {
             Commit::new("hash2".to_string()),
         );
         assert_eq!(
-            filter_branches(vec![b1.clone(), b2.clone()], vec![0, 1]),
+            filter_branches(vec![b1.clone(), b2.clone()], vec![0, 1]).unwrap(),
             vec![b1.clone(), b2.clone()]
         )
     }
