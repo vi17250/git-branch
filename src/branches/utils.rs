@@ -13,8 +13,8 @@ use walkdir::WalkDir;
 
 pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
-    let head = get_head(&git_dir)?;
-    let origin = get_origin(&git_dir);
+    let head = get_head(git_dir)?;
+    let origin = get_origin(git_dir);
 
     let branches_name = get_branches_name(&refs_dir);
     let branches = branches_name?
@@ -31,19 +31,19 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
                 Ok(origin) => **branch_name == **origin,
                 Err(_) => false,
             };
-            return Branch::new(
+            Branch::new(
                 branch_name.clone().into(),
                 **branch_name == *head,
                 is_origin,
                 *time,
                 Commit::new(commit_hash),
-            );
+            )
         })
         .collect::<Vec<Branch>>();
     Ok(branches)
 }
 
-fn get_branches_name(refs_dir: &PathBuf) -> Result<Vec<String>> {
+fn get_branches_name(refs_dir: &Path) -> Result<Vec<String>> {
     let mut names: Vec<String> = vec![];
     let refs_dir_name = refs_dir.to_str().ok_or("Failed to convert dir to str")?;
 
