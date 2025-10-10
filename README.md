@@ -1,6 +1,6 @@
 # Git branch
 
-**Use `git-branch` to manage local git branches interactivel 🔥**
+**Use `git-branch` to manage local git branches interactively 🔥**
 
 - Displays the origin branch
 - Displays the HEAD branch
@@ -25,7 +25,7 @@ cargo install --git https://github.com/vi17250/git-branch
 ```
  2. 🥈 Run `git-branch`
 
- 3. 🚀 Optional but incredible: *Add a Oh My Zsh custom aliases* 
+ 3. 🚀 Optional but incredible: *Add an alias oh my zsh* 
 ```bash
 touch $ZSH_CUSTOM/aliases.zsh
 echo "alias ggb=git-branch" >> $ZSH_CUSTOM/aliases.zs
