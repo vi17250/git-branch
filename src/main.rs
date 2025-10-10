@@ -48,7 +48,7 @@ fn main() -> Result<()> {
     let head_branch_index = branches
         .iter()
         .position(|branch| branch.is_head())
-        .ok_or("Failed to get head branch")?;
+        .ok_or("It appears that you have not yet created any commits.")?;
 
     let head_branch = branches.remove(head_branch_index);
 
