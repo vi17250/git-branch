@@ -23,12 +23,11 @@ fn main() -> Result<()> {
         if it_includes_git(&current_dir)? {
             current_dir = current_dir.join(".git");
             break;
-        } else {
-            if let false = current_dir.pop() {
-                return Err(
-                    "This is not a git repository\n💡You can create it running `git init`".into(),
-                );
-            }
+        }
+        if !current_dir.pop() {
+            return Err(
+                "This is not a git repository\n💡You can create it running `git init`".into(),
+            );
         }
     }
 
@@ -43,7 +42,7 @@ fn main() -> Result<()> {
             style("/").red(),
             origin_branch
         ),
-        None => format!("origin is empty on this repository"),
+        None => "origin is empty on this repository".to_string(),
     };
 
     let head_branch_index = branches

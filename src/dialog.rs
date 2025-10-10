@@ -32,7 +32,7 @@ pub fn selection(branches: Vec<Branch>) -> Result<Vec<Branch>> {
             _ => (),
         };
 
-        let _ = term.move_cursor_up(branches.len() as usize);
+        let _ = term.move_cursor_up(branches.len());
 
         display(&branches, highlight, &selected);
     }
@@ -61,11 +61,11 @@ fn decrement(value: &mut usize) {
     }
 }
 
-fn display(values: &Vec<Branch>, highlight: usize, selected: &Vec<usize>) {
+fn display(values: &[Branch], highlight: usize, selected: &[usize]) {
     let term = Term::stdout();
     for (index, value) in values.iter().enumerate() {
         let _ = term.clear_line();
-        if selected.into_iter().any(|select| *select == index) {
+        if selected.contains(&index) {
             print!("{} ", style('✔').green().bold());
         } else {
             print!("{} ", style('☐').color256(0).bold());
@@ -79,7 +79,7 @@ fn display(values: &Vec<Branch>, highlight: usize, selected: &Vec<usize>) {
 }
 
 fn toggle_highlight(highlight: usize, selected: &mut Vec<usize>) {
-    let includes = selected.into_iter().any(|select| *select == highlight);
+    let includes = selected.iter_mut().any(|select| *select == highlight);
     if includes {
         selected.retain(|&value| value != highlight);
     } else {
