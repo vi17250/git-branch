@@ -33,6 +33,8 @@ source ~/.zshrc
 ```
 4. 🥇 Run `ggb`
 
+[demo.webm](https://github.com/user-attachments/assets/d1f6caf5-4cc1-4f3d-b4b0-748dd9e8db1c)
+
 ## Special thanks:
 
 The original idea came from the 🧙‍♂️ [Valentin Barit](https://github.com/quibaritaenperdresatrompe)
