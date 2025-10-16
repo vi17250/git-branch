@@ -33,7 +33,10 @@ fn main() -> Result<()> {
     }
 
     let mut branches: Vec<branches::def::Branch> = get_branches(&current_dir)?;
-
+    if branches.len() == 0 {
+        println!("There are no banches to delete");
+        return Ok(());
+    }
     let origin_branch = branches.iter().find(|branch| branch.is_origin());
 
     let origin = match origin_branch {
