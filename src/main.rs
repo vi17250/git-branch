@@ -31,7 +31,6 @@ fn main() -> Result<()> {
             );
         }
     }
-
     let mut branches: Vec<branches::def::Branch> = get_branches(&current_dir)?;
 
     let origin_branch = branches.iter().find(|branch| branch.is_origin());
@@ -53,6 +52,10 @@ fn main() -> Result<()> {
 
     let head_branch = branches.remove(head_branch_index);
 
+    if branches.len() == 0 {
+        println!("There are no banches to delete");
+        return Ok(());
+    }
     let head = format!(
         "{} {} {}",
         style("HEAD").color256(6).bold(),
@@ -64,6 +67,7 @@ fn main() -> Result<()> {
     println!("{origin}\n{head}\n\n{intro}");
 
     let mut branches_to_delete = selection(branches)?;
+
     confirm(&mut branches_to_delete);
     let number_of_deleted_branches = delete_branches(&current_dir, branches_to_delete)?;
     println!("{} branches deleted", number_of_deleted_branches);
