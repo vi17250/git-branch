@@ -5,6 +5,7 @@ use std::{
 };
 
 use console::style;
+use truncrate::TruncateToBoundary;
 
 use crate::commits::def::Commit;
 use crate::util::parse_time;
@@ -15,7 +16,7 @@ pub struct Branch {
     is_head: bool,
     is_origin: bool,
     last_update: SystemTime,
-    commit: Commit,
+    commit: Option<Commit>,
 }
 
 impl Branch {
@@ -24,7 +25,7 @@ impl Branch {
         is_head: bool,
         is_origin: bool,
         last_update: SystemTime,
-        commit: Commit,
+        commit: Option<Commit>,
     ) -> Branch {
         Branch {
             name,
@@ -53,7 +54,8 @@ impl Display for Branch {
         let mut name = style(
             self.name
                 .to_str()
-                .expect("Failed to parse OsString to String"),
+                .expect("Failed to parse OsString to String")
+                .truncate_to_boundary(12),
         )
         .bold();
 
@@ -61,20 +63,25 @@ impl Display for Branch {
             name = name.red();
         };
 
-        let commit_hash = &self.commit;
         let diff = self
             .last_update
             .elapsed()
             .expect("Failed tu parse last update")
             .as_secs();
+
         let last_update = parse_time(&diff);
+
+        let commit = match &self.commit {
+            Some(commit) => format!("{commit}"),
+            None => String::new(),
+        };
 
         write!(
             f,
             "{0: <12} {1: <7} {2: <10}",
             name,
-            style(commit_hash).color256(202),
-            style(last_update).color256(241).italic()
+            style(last_update).color256(241).italic(),
+            style(commit).color256(202),
         )
     }
 }
