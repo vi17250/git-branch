@@ -5,7 +5,7 @@ use std::{fs::read_to_string, path::PathBuf};
 use regex::Regex;
 
 pub fn get_commits(branch_path: PathBuf) -> Result<Vec<Commit>> {
-    let content = read_to_string(&branch_path)?;
+    let content = read_to_string(branch_path)?;
     let commits = content
         .lines()
         .filter(|line| line.contains("\tcommit"))
