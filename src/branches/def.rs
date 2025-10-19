@@ -55,7 +55,7 @@ impl Display for Branch {
             self.name
                 .to_str()
                 .expect("Failed to parse OsString to String")
-                .truncate_to_boundary(12),
+                .truncate_to_boundary(10),
         )
         .bold();
 
@@ -63,25 +63,24 @@ impl Display for Branch {
             name = name.red();
         };
 
-        let diff = self
-            .last_update
-            .elapsed()
-            .expect("Failed tu parse last update")
-            .as_secs();
-
-        let last_update = parse_time(&diff);
-
-        let commit = match &self.commit {
-            Some(commit) => format!("{commit}"),
-            None => String::new(),
+        let (last_update, message) = match &self.commit {
+            Some(commit) => {
+                let diff = commit
+                    .get_timestamp()
+                    .elapsed()
+                    .expect("Failes to parse last commit update")
+                    .as_secs();
+                (parse_time(&diff), commit.get_message())
+            }
+            None => (String::new(), String::new()),
         };
 
         write!(
             f,
-            "{0: <12} {1: <7} {2: <10}",
+            "{0: <11} {1: <3} {2: <10}",
             name,
             style(last_update).color256(241).italic(),
-            style(commit).color256(202),
+            style(message.truncate_to_boundary(30)).color256(202),
         )
     }
 }
