@@ -28,7 +28,7 @@ impl Commit {
 
 impl Commit {
     pub fn get_timestamp(&self) -> SystemTime {
-        self.timestamp.clone()
+        self.timestamp
     }
 }
 
