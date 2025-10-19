@@ -1,17 +1,16 @@
-use std::fmt::{Display, Formatter, Result};
-use truncrate::TruncateToBoundary;
-
+use std::time::Duration;
+use std::time::{SystemTime, UNIX_EPOCH};
 #[derive(Debug, Clone, PartialEq)]
 pub struct Commit {
     hash: String,
-    timestamp: String,
+    timestamp: SystemTime,
     message: String,
 }
 
 impl Commit {
-    pub fn new(values: (String, String, String)) -> Commit {
+    pub fn new(values: (String, u64, String)) -> Commit {
         let hash = values.0.trim().to_string();
-        let timestamp = values.1;
+        let timestamp = UNIX_EPOCH + Duration::from_secs(values.1);
         let message = values.2;
         Commit {
             hash,
@@ -27,9 +26,14 @@ impl Commit {
     }
 }
 
-impl Display for Commit {
-    fn fmt(&self, f: &mut Formatter) -> Result {
-        let drained = &self.message.truncate_to_boundary(30);
-        write!(f, "{drained}")
+impl Commit {
+    pub fn get_timestamp(&self) -> SystemTime {
+        self.timestamp.clone()
+    }
+}
+
+impl Commit {
+    pub fn get_message(&self) -> String {
+        self.message.clone()
     }
 }
