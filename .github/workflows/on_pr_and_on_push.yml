@@ -1,0 +1,27 @@
+name: on_pr_and_on_push
+
+run-name: build_test_clippy
+
+on:
+  pull_request:
+    branches: [main]
+  push: 
+    branches: [main]
+
+env:
+
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      run: cargo build 
+    - name: Test
+      run: cargo test --verbose
+    - name: Clippy
+      run: cargo clippy -- -Dwarnings
