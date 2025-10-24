@@ -6,11 +6,13 @@ use branches::utils::{delete_branches, get_branches};
 
 mod commits;
 mod dialog;
-use dialog::{confirm::confirm, selection::selection};
+use dialog::confirm::confirm;
 mod util;
 
 mod error;
 pub use crate::error::{Error, Result};
+
+use valinta::multi_select;
 
 const REFS_DIR: &str = "refs/heads";
 const LOGS_DIR: &str = "logs/refs/heads";
@@ -66,10 +68,12 @@ fn main() -> Result<()> {
     let intro = style("Which branches do you want to delete?").bold();
     println!("{origin}\n{head}\n\n{intro}");
 
-    let mut branches_to_delete = selection(branches)?;
+    let mut branches_to_delete = multi_select(&branches)?;
 
     confirm(&mut branches_to_delete);
+
     let number_of_deleted_branches = delete_branches(&current_dir, branches_to_delete)?;
+
     println!("{} branches deleted", number_of_deleted_branches);
 
     Ok(())
