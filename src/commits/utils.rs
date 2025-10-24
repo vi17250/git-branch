@@ -31,6 +31,8 @@ fn get_commit_values(line: &str) -> Result<(String, u64, String)> {
         name.to_string(),
     ))
 }
+
+#[cfg(test)]
 mod test {
     use super::*;
 
