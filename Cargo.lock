@@ -100,6 +100,7 @@ dependencies = [
  "dialoguer",
  "regex",
  "truncrate",
+ "valinta",
  "walkdir",
 ]
 
@@ -232,6 +233,14 @@ name = "unicode-width"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4a1a07cc7db3810833284e8d372ccdc6da29741639ecc70c9ec107df0fa6154c"
+
+[[package]]
+name = "valinta"
+version = "0.1.0"
+source = "git+https://github.com/vi17250/valinta#c673e4c915a01d057502c6f7dd180223902582ad"
+dependencies = [
+ "console",
+]
 
 [[package]]
 name = "walkdir"
