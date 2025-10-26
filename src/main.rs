@@ -4,7 +4,6 @@ use std::{env, fs::read_dir, path::PathBuf};
 mod branches;
 use branches::utils::{delete_branches, get_branches};
 
-mod commits;
 mod dialog;
 use dialog::{confirm::confirm, selection::selection};
 mod util;

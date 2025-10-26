@@ -1,7 +1,6 @@
 use crate::Result;
 use crate::branches::def::Branch;
 use crate::branches::{head::get_head, origin::get_origin};
-use crate::commits::utils::get_commits;
 use crate::{LOGS_DIR, REFS_DIR};
 use std::ffi::OsString;
 use std::fs::{remove_dir, remove_file};
@@ -13,7 +12,6 @@ use walkdir::WalkDir;
 
 pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
-    let logs_dir = Path::new(&git_dir).join(LOGS_DIR);
     let head = get_head(git_dir)?;
     let origin = get_origin(git_dir);
 
@@ -27,13 +25,10 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
                 .expect("Failed to parse metadata")
                 .modified()
                 .expect("Failed to parse system time");
-            let commit_hash = read_to_string(&path).expect("Failed to read commit hash");
-            let commit_hash = commit_hash.trim();
-            let commits = get_commits(logs_dir.join(branch_name)).expect("Failed");
-            let commit = commits
-                .into_iter()
-                .find(|commit| commit.get_hash() == commit_hash)
-                .clone();
+            let commit_hash = read_to_string(&path)
+                .expect("Failed to read commit hash")
+                .trim()
+                .into();
             let is_origin = match &origin {
                 Ok(origin) => **branch_name == **origin,
                 Err(_) => false,
@@ -43,7 +38,7 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
                 **branch_name == *head,
                 is_origin,
                 *time,
-                commit,
+                commit_hash,
             )
         })
         .collect::<Vec<Branch>>();
