@@ -7,7 +7,6 @@ use std::{
 use console::style;
 use truncrate::TruncateToBoundary;
 
-use crate::commits::def::Commit;
 use crate::util::parse_time;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -16,7 +15,7 @@ pub struct Branch {
     is_head: bool,
     is_origin: bool,
     last_update: SystemTime,
-    commit: Option<Commit>,
+    commit_hash: String,
 }
 
 impl Branch {
@@ -25,14 +24,14 @@ impl Branch {
         is_head: bool,
         is_origin: bool,
         last_update: SystemTime,
-        commit: Option<Commit>,
+        commit_hash: String,
     ) -> Branch {
         Branch {
             name,
             is_head,
             is_origin,
             last_update,
-            commit,
+            commit_hash,
         }
     }
 
@@ -59,20 +58,16 @@ impl Display for Branch {
         )
         .bold();
 
+        let diff = self
+            .last_update
+            .elapsed()
+            .expect("Failed to parse last update")
+            .as_secs();
+
+        let last_update = parse_time(&diff);
+
         if self.is_origin {
             name = name.red();
-        };
-
-        let (last_update, message) = match &self.commit {
-            Some(commit) => {
-                let diff = commit
-                    .get_timestamp()
-                    .elapsed()
-                    .expect("Failes to parse last commit update")
-                    .as_secs();
-                (parse_time(&diff), commit.get_message())
-            }
-            None => (String::new(), String::new()),
         };
 
         write!(
@@ -80,7 +75,7 @@ impl Display for Branch {
             "{0: <11} {1: <3} {2: <10}",
             name,
             style(last_update).color256(241).italic(),
-            style(message.truncate_to_boundary(30)).color256(202),
+            style(self.commit_hash.truncate_to_boundary(7)).color256(202),
         )
     }
 }

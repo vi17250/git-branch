@@ -92,7 +92,6 @@ mod test {
     use std::{ffi::OsString, path::PathBuf, time::SystemTime};
 
     use crate::branches::def::Branch;
-    use crate::commits::def::Commit;
     use crate::dialog::selection::filter_branches;
 
     #[test]
@@ -102,22 +101,14 @@ mod test {
             false,
             false,
             SystemTime::now(),
-            Some(Commit::new((
-                "hash1".to_string(),
-                1234,
-                "hash1".to_string(),
-            ))),
+            "hash1".to_string(),
         );
         let b2 = Branch::new(
             OsString::from("b2"),
             false,
             false,
             SystemTime::now(),
-            Some(Commit::new((
-                "hash2".to_string(),
-                1234,
-                "hash2".to_string(),
-            ))),
+            "hash2".to_string(),
         );
         assert_eq!(filter_branches(vec![b1, b2], vec![]).unwrap(), vec![])
     }
@@ -128,22 +119,14 @@ mod test {
             false,
             false,
             SystemTime::now(),
-            Some(Commit::new((
-                "hash3".to_string(),
-                1234,
-                "hash3".to_string(),
-            ))),
+            "hash3".to_string(),
         );
         let b2 = Branch::new(
             OsString::from("b2"),
             false,
             false,
             SystemTime::now(),
-            Some(Commit::new((
-                "hash4".to_string(),
-                1234,
-                "hash4".to_string(),
-            ))),
+            "hash4".to_string(),
         );
         assert_eq!(
             filter_branches(vec![b1.clone(), b2.clone()], vec![1]).unwrap(),
@@ -158,22 +141,14 @@ mod test {
             false,
             false,
             SystemTime::now(),
-            Some(Commit::new((
-                "hash5".to_string(),
-                1234,
-                "hash5".to_string(),
-            ))),
+            "hash5".to_string(),
         );
         let b2 = Branch::new(
             OsString::from("b2"),
             false,
             false,
             SystemTime::now(),
-            Some(Commit::new((
-                "hash6".to_string(),
-                1234,
-                "hash6".to_string(),
-            ))),
+            "hash6".to_string(),
         );
         assert_eq!(
             filter_branches(vec![b1.clone(), b2.clone()], vec![0, 1]).unwrap(),
