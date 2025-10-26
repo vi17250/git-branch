@@ -19,7 +19,7 @@ For all developers who use git as their version control system
 
 ### Usage
 
-1. 📦 Install with cargo from [github repository](https://crates.io/)
+1. 📦 Install with cargo
 ```bash 
 cargo install git-branch
 ```
