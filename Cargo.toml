@@ -1,6 +1,6 @@
 [package]
 name = "git-branch"
-version = "0.1.2"
+version = "0.1.0"
 edition = "2024"
 authors = ["Victor Aubinaud"]
 description = "Use git-branch to manage local git branches interactively"
