@@ -13,15 +13,15 @@ For all developers who use git as their version control system
 
 ## Installation
 
-### Pre-requisites
+### Pre-requisite
 
 1. [Install `rustup`](https://www.rust-lang.org/tools/install) to compile the source code for our device/os
 
 ### Usage
 
-1. 📦 Install with cargo from github repository 
+1. 📦 Install with cargo from [github repository](https://crates.io/)
 ```bash 
-cargo install --git https://github.com/vi17250/git-branch
+cargo install git-branch
 ```
  2. 🥈 Run `git-branch`
 
