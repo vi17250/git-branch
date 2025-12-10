@@ -4,7 +4,6 @@ use std::{
     time::SystemTime,
 };
 
-use console::style;
 use truncrate::TruncateToBoundary;
 
 use crate::util::parse_time;
@@ -46,18 +45,9 @@ impl Branch {
     pub fn get_name(&self) -> OsString {
         self.name.clone()
     }
-}
 
-impl Display for Branch {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        let mut name = style(
-            self.name
-                .to_str()
-                .expect("Failed to parse OsString to String")
-                .truncate_to_boundary(10),
-        )
-        .bold();
-
+    pub fn display(&self) -> String {
+        let name = self.get_name();
         let diff = self
             .last_update
             .elapsed()
@@ -65,17 +55,21 @@ impl Display for Branch {
             .as_secs();
 
         let last_update = parse_time(&diff);
+        let commit_hash = self.commit_hash.truncate_to_boundary(7);
 
-        if self.is_origin {
-            name = name.red();
-        };
-
-        write!(
-            f,
-            "{0: <11} {1: <3} {2: <10}",
-            name,
-            style(last_update).color256(241).italic(),
-            style(self.commit_hash.truncate_to_boundary(7)).color256(202),
+        format!(
+            "{} -> {} | {}",
+            name.to_str().unwrap(),
+            commit_hash,
+            last_update
         )
+    }
+}
+
+impl Display for Branch {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        let output = self.display();
+
+        write!(f, "{}", output)
     }
 }

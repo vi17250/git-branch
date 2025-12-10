@@ -1,11 +1,12 @@
-use console::style;
 use std::{env, fs::read_dir, path::PathBuf};
+use console::style;
+use valinta::select;
 
 mod branches;
 use branches::utils::{delete_branches, get_branches};
 
 mod dialog;
-use dialog::{confirm::confirm, selection::selection};
+use dialog::confirm::confirm;
 mod util;
 
 mod error;
@@ -65,7 +66,7 @@ fn main() -> Result<()> {
     let intro = style("Which branches do you want to delete?").bold();
     println!("{origin}\n{head}\n\n{intro}");
 
-    let mut branches_to_delete = selection(branches)?;
+    let mut branches_to_delete = select(&branches)?.0;
 
     confirm(&mut branches_to_delete);
     let number_of_deleted_branches = delete_branches(&current_dir, branches_to_delete)?;
