@@ -14,5 +14,5 @@ homepage= "https://github.com/vi17250/git-branch"
 console = "0.16.1"
 dialoguer = "0.12.0"
 truncrate = "0.1.3"
-valinta = { git = "https://github.com/vi17250/valinta", version = "0.1.0" }
+valinta = "0.1.0"
 walkdir = "2.5.0"
