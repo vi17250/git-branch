@@ -9,6 +9,9 @@ use crate::Result;
 
 pub fn get_origin(git_dir: &PathBuf) -> Result<OsString> {
     let head_file_path = Path::new(&git_dir).join(ORIGIN_DIR);
+    if !head_file_path.exists() {
+        return Err("Origin not exist".into());
+    }
     let content = read_to_string(head_file_path)?;
 
     let head_path = PathBuf::from(
