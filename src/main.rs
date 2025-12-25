@@ -53,7 +53,7 @@ fn main() -> Result<()> {
     let head_branch = branches.remove(head_branch_index);
 
     if branches.is_empty() {
-        println!("There are no banches to delete");
+        println!("No banches to delete");
         return Ok(());
     }
     let head = format!(
