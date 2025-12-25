@@ -27,7 +27,7 @@ fn main() -> Result<()> {
         }
         if !current_dir.pop() {
             return Err(
-                "This is not a git repository\n💡You can create it running `git init`".into(),
+                "This is not a git repository -> 💡You can create it running `git init`".into(),
             );
         }
     }
