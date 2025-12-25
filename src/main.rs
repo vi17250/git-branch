@@ -4,6 +4,8 @@ use valinta::select;
 
 mod branches;
 use branches::utils::{delete_branches, get_branches};
+use branches::def::Branch;
+
 
 mod dialog;
 use dialog::confirm::confirm;
@@ -31,7 +33,7 @@ fn main() -> Result<()> {
             );
         }
     }
-    let mut branches: Vec<branches::def::Branch> = get_branches(&current_dir)?;
+    let mut branches: Vec<Branch> = get_branches(&current_dir)?;
 
     let origin_branch = branches.iter().find(|branch| branch.is_origin());
 
