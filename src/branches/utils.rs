@@ -13,34 +13,29 @@ use walkdir::WalkDir;
 pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
     let head = get_head(git_dir)?;
-    let origin = get_origin(git_dir);
+    let origin = get_origin(git_dir)?;
 
     let branches_name = get_branches_name(&refs_dir);
     let branches = branches_name?
         .iter()
         .map(|branch_name| {
             let path = Path::new(&refs_dir).join(branch_name);
-            let time = &path
-                .metadata()
-                .expect("Failed to parse metadata")
-                .modified()
-                .expect("Failed to parse system time");
+            let time = &path.metadata()?.modified()?;
             let commit_hash = read_to_string(&path)
                 .expect("Failed to read commit hash")
                 .trim()
                 .into();
-            let is_origin = match &origin {
-                Ok(origin) => **branch_name == **origin,
-                Err(_) => false,
-            };
-            Branch::new(
+            let is_head = **branch_name == *head;
+            let is_origin = **branch_name == *origin;
+            Ok(Branch::new(
                 branch_name.clone().into(),
-                **branch_name == *head,
+                is_head,
                 is_origin,
                 *time,
                 commit_hash,
-            )
+            ))
         })
+        .flat_map(|branch: Result<Branch>| branch.ok())
         .collect::<Vec<Branch>>();
     Ok(branches)
 }
