@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3](https://github.com/vi17250/git-branch/compare/v0.1.2...v0.1.3) - 2026-03-29
+
+### Fixed
+
+- 🐛 Throw an error and quit if there are no existing commit
+- 🐛 change message when there are no branches to delete
+- 🐛 change message when it's not a git repository
+
+### Other
+
+- *(deps)* 🤖 update valinta to v 0.2.0
+- 💡 some wording and optimization
+
 ## [0.1.2](https://github.com/vi17250/git-branch/compare/v0.1.1...v0.1.2) - 2025-12-15
 
 ### Fixed
