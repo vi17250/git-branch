@@ -160,7 +160,7 @@ dependencies = [
 
 [[package]]
 name = "git-branch"
-version = "0.1.3"
+version = "0.1.4"
 dependencies = [
  "console",
  "dialoguer",
