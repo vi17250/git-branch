@@ -530,9 +530,9 @@ checksum = "ebc1c04c71510c7f702b52b7c350734c9ff1295c464a03335b00bb84fc54f853"
 
 [[package]]
 name = "valinta"
-version = "0.2.0"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "130bf87dd1d5ace4c6c9471e4e670b0d001d8d3e6bdfc06717112ae8d60796dd"
+checksum = "9cc9bf03aff83724430d181c52c5fc8cd54c3f752e829cd00327299b7b379d5d"
 dependencies = [
  "console",
  "crossterm",
