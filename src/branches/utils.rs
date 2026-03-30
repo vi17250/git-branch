@@ -1,6 +1,6 @@
 use crate::Result;
 use crate::branches::def::Branch;
-use crate::branches::{head::get_head, origin::get_origin};
+use crate::branches::{head::get_head};
 use crate::{LOGS_DIR, REFS_DIR};
 use std::ffi::OsString;
 use std::fs::{remove_dir, remove_file};
@@ -13,7 +13,6 @@ use walkdir::WalkDir;
 pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
     let head = get_head(git_dir)?;
-    let origin = get_origin(git_dir)?;
 
     let branches_name = get_branches_name(&refs_dir);
     let branches = branches_name?
@@ -26,11 +25,9 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
                 .trim()
                 .into();
             let is_head = **branch_name == *head;
-            let is_origin = **branch_name == *origin;
             Ok(Branch::new(
                 branch_name.clone().into(),
                 is_head,
-                is_origin,
                 *time,
                 commit_hash,
             ))
