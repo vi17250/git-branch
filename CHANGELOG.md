@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- release v0.1.4
+- *(deps)* 🤖 update to valinta 0.2.0
+- 💡 create a `file_system` module which find .git dir
+
+## [0.1.5](https://github.com/vi17250/git-branch/compare/v0.1.4...v0.1.5) - 2026-03-30
+
+### Fixed
+
+- 🐛 remove `Origin` feature
+
+### Other
+
 - *(deps)* 🤖 update to valinta 0.2.0
 - 💡 create a `file_system` module which find .git dir
 
