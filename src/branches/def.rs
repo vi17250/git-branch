@@ -12,7 +12,6 @@ use crate::util::parse_time;
 pub struct Branch {
     name: OsString,
     is_head: bool,
-    is_origin: bool,
     last_update: SystemTime,
     commit_hash: String,
 }
@@ -21,14 +20,12 @@ impl Branch {
     pub fn new(
         name: OsString,
         is_head: bool,
-        is_origin: bool,
         last_update: SystemTime,
         commit_hash: String,
     ) -> Branch {
         Branch {
             name,
             is_head,
-            is_origin,
             last_update,
             commit_hash,
         }
@@ -36,10 +33,6 @@ impl Branch {
 
     pub fn is_head(&self) -> bool {
         self.is_head
-    }
-
-    pub fn is_origin(&self) -> bool {
-        self.is_origin
     }
 
     pub fn get_name(&self) -> OsString {

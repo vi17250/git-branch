@@ -6,8 +6,6 @@ mod branches;
 use branches::def::Branch;
 use branches::utils::{delete_branches, get_branches};
 
-mod dialog;
-use dialog::confirm::confirm;
 mod util;
 
 mod file_system;
@@ -19,7 +17,6 @@ const COMMIT_EDITMSG: &str = "COMMIT_EDITMSG";
 const REFS_DIR: &str = "refs/heads";
 const LOGS_DIR: &str = "logs/refs/heads";
 const HEAD: &str = "HEAD";
-const ORIGIN_DIR: &str = "refs/remotes/origin/HEAD";
 
 fn main() -> Result<()> {
 
@@ -31,18 +28,6 @@ fn main() -> Result<()> {
     }
 
     let mut branches: Vec<Branch> = get_branches(&git_dir)?;
-
-    let origin_branch = branches.iter().find(|branch| branch.is_origin());
-
-    let origin = match origin_branch {
-        Some(origin_branch) => format!(
-            "{} {} {}",
-            style("origin").red().bold(),
-            style("/").red(),
-            origin_branch
-        ),
-        None => "origin is empty on this repository".to_string(),
-    };
 
     let head_branch = branches
         .iter()
@@ -64,11 +49,10 @@ fn main() -> Result<()> {
     }
 
     let intro = style("Which branches do you want to delete?").bold();
-    println!("{origin}\n{head_message}\n\n{intro}");
+    println!("{head_message}\n\n{intro}");
 
-    let mut branches_to_delete = select(&branches)?.0;
+    let branches_to_delete = select(&branches)?.0;
 
-    confirm(&mut branches_to_delete);
     let number_of_deleted_branches = delete_branches(&git_dir, branches_to_delete)?;
     println!("{} branches deleted", number_of_deleted_branches);
 
