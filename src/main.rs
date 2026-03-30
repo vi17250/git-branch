@@ -1,9 +1,5 @@
 use console::style;
-use std::{
-    env,
-    fs::read_dir,
-    path::{Path, PathBuf},
-};
+use std::path::Path;
 use valinta::select;
 
 mod branches;
@@ -13,6 +9,8 @@ use branches::utils::{delete_branches, get_branches};
 mod dialog;
 use dialog::confirm::confirm;
 mod util;
+
+mod file_system;
 
 mod error;
 pub use crate::error::{Error, Result};
@@ -24,26 +22,15 @@ const HEAD: &str = "HEAD";
 const ORIGIN_DIR: &str = "refs/remotes/origin/HEAD";
 
 fn main() -> Result<()> {
-    let mut current_dir = env::current_dir()?;
 
-    loop {
-        if it_includes_git(&current_dir)? {
-            current_dir = current_dir.join(".git");
-            break;
-        }
-        if !current_dir.pop() {
-            return Err(
-                "This is not a git repository -> 💡You can create it running `git init`".into(),
-            );
-        }
-    }
+    let git_dir = file_system::git_dir()?;
 
-    let commit_exist: bool = Path::new(&current_dir).join(COMMIT_EDITMSG).exists();
+    let commit_exist: bool = Path::new(&git_dir).join(COMMIT_EDITMSG).exists();
     if !commit_exist {
         return Err("It appears that you have not yet created any commits".into());
     }
 
-    let mut branches: Vec<Branch> = get_branches(&current_dir)?;
+    let mut branches: Vec<Branch> = get_branches(&git_dir)?;
 
     let origin_branch = branches.iter().find(|branch| branch.is_origin());
 
@@ -57,7 +44,10 @@ fn main() -> Result<()> {
         None => "origin is empty on this repository".to_string(),
     };
 
-    let head_branch = branches.iter().position(|branch| branch.is_head()).map(|index| branches.remove(index));
+    let head_branch = branches
+        .iter()
+        .position(|branch| branch.is_head())
+        .map(|index| branches.remove(index));
 
     let head_message: String = match head_branch {
         Some(branch) => format!(
@@ -79,19 +69,8 @@ fn main() -> Result<()> {
     let mut branches_to_delete = select(&branches)?.0;
 
     confirm(&mut branches_to_delete);
-    let number_of_deleted_branches = delete_branches(&current_dir, branches_to_delete)?;
+    let number_of_deleted_branches = delete_branches(&git_dir, branches_to_delete)?;
     println!("{} branches deleted", number_of_deleted_branches);
 
     Ok(())
-}
-
-fn it_includes_git(dir: &PathBuf) -> Result<bool> {
-    let entries = read_dir(dir)?;
-    let result = entries
-        .map(|entry| entry.expect("Failed to parse Dir name").file_name())
-        .find(|value| value == ".git");
-    match result {
-        None => Ok(false),
-        _ => Ok(true),
-    }
 }
