@@ -162,6 +162,7 @@ dependencies = [
 name = "git-branch"
 version = "0.1.5"
 dependencies = [
+ "anyhow",
  "console",
  "dialoguer",
  "truncrate",

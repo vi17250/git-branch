@@ -1,7 +1,7 @@
-use crate::Result;
 use crate::branches::def::Branch;
-use crate::branches::{head::get_head};
+use crate::branches::head::get_head;
 use crate::{LOGS_DIR, REFS_DIR};
+use anyhow::{Context, Result};
 use std::ffi::OsString;
 use std::fs::{remove_dir, remove_file};
 use std::{
@@ -21,7 +21,7 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
             let path = Path::new(&refs_dir).join(branch_name);
             let time = &path.metadata()?.modified()?;
             let commit_hash = read_to_string(&path)
-                .expect("Failed to read commit hash")
+                .context("Failed to read commit hash")?
                 .trim()
                 .into();
             let is_head = **branch_name == *head;
@@ -39,9 +39,11 @@ pub fn get_branches(git_dir: &PathBuf) -> Result<Vec<Branch>> {
 
 fn get_branches_name(refs_dir: &Path) -> Result<Vec<String>> {
     let mut names: Vec<String> = vec![];
-    let refs_dir_name = refs_dir.to_str().ok_or("Failed to convert dir to str")?;
+    let refs_dir_name = refs_dir
+        .to_str()
+        .context("Failed to convert dir to str")?;
 
-    for entry in WalkDir::new(refs_dir.to_str().expect("WTF")) {
+    for entry in WalkDir::new(refs_dir.to_str().context("Failed to read branches directory")?) {
         let entry = entry?;
         if entry.path().is_file() {
             let path = entry.path().display().to_string();
@@ -68,7 +70,7 @@ fn remove(git_dir: &PathBuf, path: OsString) -> Result<()> {
     let name = path
         .into_string()
         .ok()
-        .ok_or("Failed to parse branch name")?;
+        .context("Failed to parse branch name")?;
     let mut paths = name.split("/").collect::<Vec<&str>>();
 
     let path = Path::new(&refs_dir).join(&name);
