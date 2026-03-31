@@ -1,3 +1,4 @@
+use anyhow::{Context, Result};
 use std::{
     ffi::OsString,
     fs::read_to_string,
@@ -5,7 +6,6 @@ use std::{
 };
 
 use crate::HEAD;
-use crate::Result;
 
 pub fn get_head(git_dir: &PathBuf) -> Result<OsString> {
     let head_file_path = Path::new(&git_dir).join(HEAD);
@@ -14,9 +14,9 @@ pub fn get_head(git_dir: &PathBuf) -> Result<OsString> {
         content
             .split(" ")
             .last()
-            .ok_or("Failed to get head branch")?
+            .context("Failed to get head branch")?
             .replace("\n", ""),
     );
-    let head = head_path.file_name().ok_or("Failed to read head")?;
+    let head = head_path.file_name().context("Failed to parse head name")?;
     Ok(OsString::from(head))
 }
