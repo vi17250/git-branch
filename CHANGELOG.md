@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.6](https://github.com/vi17250/git-branch/compare/v0.1.5...v0.1.6) - 2026-04-01
+
+### Fixed
+
+- 🐛 `git_dir` module is private
+
+### Other
+
+- 💡 GIT_DIR is static and available in all the modules
+- 💍 tests the output of branch::display()
+- 💡 few optimizations. Uses of `Cow` to display name
+- 💡 branches module uses separate submodules
+- 💡 errors are handled by anyhow
+- 💡 remove useless `includes_git` method
+- release v0.1.5
+
 ## [0.1.5](https://github.com/vi17250/git-branch/compare/v0.1.4...v0.1.5) - 2026-03-30
 
 ### Fixed
