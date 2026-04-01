@@ -1,6 +1,9 @@
-use anyhow::{Result, anyhow};
+use anyhow::{Result, anyhow, Context};
 use console::style;
-use std::path::Path;
+use std::{
+    path::{Path, PathBuf},
+    sync::OnceLock,
+};
 
 mod branches;
 use branches::def::Branch;
@@ -14,15 +17,19 @@ const REFS_DIR: &str = "refs/heads";
 const LOGS_DIR: &str = "logs/refs/heads";
 const HEAD: &str = "HEAD";
 
+static GIT_DIR: OnceLock<PathBuf> = OnceLock::new();
+
 fn main() -> Result<()> {
     let git_dir = file_system::git_dir()?;
+    GIT_DIR.set(git_dir).map_err(|_|anyhow!("Failed to init GIT_DIR"))?;
+    let git_dir = GIT_DIR.get().context("Failed to retrieve .git directory")?;
 
-    let commit_msg = Path::new(&git_dir).join(COMMIT_EDITMSG);
-    if !commit_msg.exists() {
+    let commit_editmsg = Path::new(&git_dir).join(COMMIT_EDITMSG);
+    if !commit_editmsg.exists() {
         return Err(anyhow!(format!("⚠️ At least one commit must be created")));
     }
 
-    let mut branches: Vec<Branch> = branches::init(&git_dir)?;
+    let mut branches: Vec<Branch> = branches::init()?;
 
     let head_branch = branches
         .iter()
@@ -48,7 +55,7 @@ fn main() -> Result<()> {
 
     let branches_to_delete = valinta::select(&branches)?;
 
-    let number_of_deleted_branches = branches::delete(&git_dir, branches_to_delete.0)?;
+    let number_of_deleted_branches = branches::delete(branches_to_delete.0)?;
     println!("{} branches deleted", number_of_deleted_branches);
 
     Ok(())

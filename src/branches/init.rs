@@ -1,9 +1,9 @@
-use anyhow::Result;
-use std::path::{Path, PathBuf};
+use anyhow::{Context, Result};
+use std::path::Path;
 
 use crate::branches::def::Branch;
 use crate::branches::head::Head;
-use crate::{REFS_DIR};
+use crate::{GIT_DIR, REFS_DIR};
 
 use crate::branches::get_branches_informations;
 
@@ -13,9 +13,10 @@ use crate::branches::get_branches_informations;
 /// contained in the file in the folder `.git/refs/heads`:
 /// It's easy to determinate if a branch is the current branch:
 /// the current branch is mentionned in the .git/HEAD file
-pub fn init(git_dir: &PathBuf) -> Result<Vec<Branch>> {
+pub fn init() -> Result<Vec<Branch>> {
+    let git_dir = GIT_DIR.get().context("Failed to retrieve .git directory")?;
     let refs_dir = Path::new(&git_dir).join(REFS_DIR);
-    let head = Head::init(git_dir)?.get_name();
+    let head = Head::init()?.get_name();
 
     let branches_informations = get_branches_informations(&refs_dir)?;
     let branches = branches_informations
@@ -31,4 +32,3 @@ pub fn init(git_dir: &PathBuf) -> Result<Vec<Branch>> {
         .collect::<Vec<Branch>>();
     Ok(branches)
 }
-
