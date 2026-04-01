@@ -4,12 +4,11 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-use console::style;
 use truncrate::TruncateToBoundary;
 
 use crate::util::parse_time;
 
-const NAME_MAX_LENGTH: usize = 10;
+const NAME_MAX_LENGTH: usize = 16;
 
 /// Representation of a git branch
 #[derive(Debug, Clone, PartialEq)]
@@ -59,7 +58,12 @@ impl Branch {
 
         let last_update = parse_time(&diff);
         let commit_hash = self.commit_hash.truncate_to_boundary(7).to_string();
-        format!("{:NAME_MAX_LENGTH$.NAME_MAX_LENGTH$}| {} | {}", style(name).bold(), commit_hash, last_update)
+        format!(
+            "{:NAME_MAX_LENGTH$.NAME_MAX_LENGTH$}| {} | {}",
+            name,
+            commit_hash,
+            last_update
+        )
     }
 }
 
@@ -68,5 +72,26 @@ impl Display for Branch {
         let informations = self.display();
 
         write!(f, "{}", informations)
+    }
+}
+
+#[allow(warnings)]
+mod test {
+    use std::time::SystemTime;
+
+    use crate::branches::def::Branch;
+
+    #[test]
+    fn it_displays_when_name_is_short() {
+        let last_update = SystemTime::now();
+        let branch = Branch::new("name".to_string(), true, last_update, "a1b2c3D".to_string());
+        assert_eq!(branch.display(), "name            | a1b2c3D | 0 sec")
+    }
+    
+    #[test]
+    fn it_displays_when_name_is_long() {
+        let last_update = SystemTime::now();
+        let branch = Branch::new("aSuperSuperLongName".to_string(), true, last_update, "a1b2c3D".to_string());
+        assert_eq!(branch.display(), "aSuperSuperLo...| a1b2c3D | 0 sec")
     }
 }
