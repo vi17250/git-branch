@@ -4,7 +4,6 @@ use std::path::Path;
 
 mod branches;
 use branches::def::Branch;
-use branches::utils::{delete_branches, get_branches};
 
 mod util;
 
@@ -23,7 +22,7 @@ fn main() -> Result<()> {
         return Err(anyhow!(format!("⚠️ At least one commit must be created")));
     }
 
-    let mut branches: Vec<Branch> = get_branches(&git_dir)?;
+    let mut branches: Vec<Branch> = branches::init(&git_dir)?;
 
     let head_branch = branches
         .iter()
@@ -49,7 +48,7 @@ fn main() -> Result<()> {
 
     let branches_to_delete = valinta::select(&branches)?;
 
-    let number_of_deleted_branches = delete_branches(&git_dir, branches_to_delete.0)?;
+    let number_of_deleted_branches = branches::delete(&git_dir, branches_to_delete.0)?;
     println!("{} branches deleted", number_of_deleted_branches);
 
     Ok(())
