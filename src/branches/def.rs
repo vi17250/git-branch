@@ -1,11 +1,15 @@
 use std::{
+    borrow::Cow,
     fmt::{Display, Formatter, Result},
-    time::SystemTime,
+    time::{Duration, SystemTime},
 };
 
+use console::style;
 use truncrate::TruncateToBoundary;
 
 use crate::util::parse_time;
+
+const NAME_MAX_LENGTH: usize = 10;
 
 /// Representation of a git branch
 #[derive(Debug, Clone, PartialEq)]
@@ -39,30 +43,30 @@ impl Branch {
         self.name.clone()
     }
 
-    pub fn display(&self) -> String {
+    fn display(&self) -> String {
         let name = self.get_name();
+        let name = if name.len() > NAME_MAX_LENGTH {
+            Cow::Owned(format!("{}...", &name[..NAME_MAX_LENGTH - 3]))
+        } else {
+            Cow::Borrowed(name.as_str())
+        };
+
         let diff = self
             .last_update
             .elapsed()
-            .expect("Failed to parse last update")
+            .unwrap_or(Duration::ZERO)
             .as_secs();
 
         let last_update = parse_time(&diff);
-        let commit_hash = self.commit_hash.truncate_to_boundary(7);
-
-        format!(
-            "{} -> {} | {}",
-            name,
-            commit_hash,
-            last_update
-        )
+        let commit_hash = self.commit_hash.truncate_to_boundary(7).to_string();
+        format!("{:NAME_MAX_LENGTH$.NAME_MAX_LENGTH$}| {} | {}", style(name).bold(), commit_hash, last_update)
     }
 }
 
 impl Display for Branch {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        let output = self.display();
+        let informations = self.display();
 
-        write!(f, "{}", output)
+        write!(f, "{}", informations)
     }
 }
