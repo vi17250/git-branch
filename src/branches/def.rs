@@ -1,5 +1,4 @@
 use std::{
-    ffi::OsString,
     fmt::{Display, Formatter, Result},
     time::SystemTime,
 };
@@ -8,9 +7,10 @@ use truncrate::TruncateToBoundary;
 
 use crate::util::parse_time;
 
+/// Representation of a git branch
 #[derive(Debug, Clone, PartialEq)]
 pub struct Branch {
-    name: OsString,
+    name: String,
     is_head: bool,
     last_update: SystemTime,
     commit_hash: String,
@@ -18,7 +18,7 @@ pub struct Branch {
 
 impl Branch {
     pub fn new(
-        name: OsString,
+        name: String,
         is_head: bool,
         last_update: SystemTime,
         commit_hash: String,
@@ -35,7 +35,7 @@ impl Branch {
         self.is_head
     }
 
-    pub fn get_name(&self) -> OsString {
+    pub fn get_name(&self) -> String {
         self.name.clone()
     }
 
@@ -52,7 +52,7 @@ impl Branch {
 
         format!(
             "{} -> {} | {}",
-            name.to_str().unwrap(),
+            name,
             commit_hash,
             last_update
         )

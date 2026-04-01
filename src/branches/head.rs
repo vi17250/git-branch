@@ -1,22 +1,37 @@
 use anyhow::{Context, Result};
 use std::{
-    ffi::OsString,
     fs::read_to_string,
     path::{Path, PathBuf},
 };
 
 use crate::HEAD;
 
-pub fn get_head(git_dir: &PathBuf) -> Result<OsString> {
-    let head_file_path = Path::new(&git_dir).join(HEAD);
-    let content = read_to_string(head_file_path)?;
-    let head_path = PathBuf::from(
-        content
-            .split(" ")
-            .last()
-            .context("Failed to get head branch")?
-            .replace("\n", ""),
-    );
-    let head = head_path.file_name().context("Failed to parse head name")?;
-    Ok(OsString::from(head))
+#[derive(Debug)]
+pub struct Head {
+    branch_name: String,
+}
+
+impl Head {
+    /// Create a new HEAD struct which includes the name of the current branch.
+    ///
+    /// It reads the content if the .git/HEAD file and parses it.
+    /// The result of the parsing (the filename) is the name of the current branch
+    pub fn init(git_dir: &PathBuf) -> Result<Self> {
+        let head_file_path: PathBuf = Path::new(&git_dir).join(HEAD);
+        let content = read_to_string(head_file_path).context("Failed to read `.git/HEAD` file")?;
+        let path = Path::new(&content);
+        let branch_name = path
+            .file_name()
+            .context("Failed to determine HEAD branch")?
+            .to_string_lossy()
+            .into_owned();
+
+        Ok(Head { branch_name })
+    }
+}
+
+impl Head {
+    pub fn get_name(&self) -> String {
+        self.branch_name.clone()
+    }
 }
